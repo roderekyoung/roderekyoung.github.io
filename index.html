@@ -147,9 +147,9 @@
         </div>
       </button>
 
-      <a href="mailto:roderek.young@my.utsa.edu" class="text-xs bg-utsa-orange hover:bg-orange-600 text-white font-semibold px-3.5 py-2 rounded-lg transition shadow-sm shrink-0">
+      <button type="button" onclick="navigate('contact')" class="text-xs bg-utsa-orange hover:bg-orange-600 text-white font-semibold px-3.5 py-2 rounded-lg transition shadow-sm shrink-0">
         Contact Me
-      </a>
+      </button>
     </div>
   </header>
 
@@ -1079,6 +1079,96 @@
       </div>
     </div>
 
+    <!-- VIEW: CONTACT -->
+    <div id="view-contact" class="view-panel view-hidden space-y-8" role="region" aria-label="Contact">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4 gap-4 flex-wrap">
+        <div>
+          <h2 class="text-2xl font-black text-utsa-navy">Contact</h2>
+          <p class="text-slate-500 text-sm mt-1">How to reach me</p>
+        </div>
+      </div>
+
+      <nav class="bubble-nav-strip mt-4 mb-2" aria-label="Section bubbles">
+        <div class="grid grid-cols-4 sm:grid-cols-7 gap-3 sm:gap-4 justify-items-center">
+          <button type="button" data-bubble-nav="home" onclick="navigate('home')" class="bubble-btn flex flex-col items-center gap-1.5 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-1.5">
+            <span class="bubble-circle rounded-full bg-utsa-navy/10 border-2 border-utsa-navy/40 text-utsa-navy shadow-md shadow-utsa-navy/10 flex items-center justify-center group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
+              <i class="fa-solid fa-house" aria-hidden="true"></i>
+            </span>
+            <span class="bubble-label text-[10px] sm:text-xs font-bold text-utsa-navy text-center leading-tight">Home</span>
+          </button>
+          <button type="button" data-bubble-nav="about" onclick="navigate('about')" class="bubble-btn flex flex-col items-center gap-1.5 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-1.5">
+            <span class="bubble-circle rounded-full bg-utsa-navy/10 border-2 border-utsa-navy/40 text-utsa-navy shadow-md shadow-utsa-navy/10 flex items-center justify-center group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
+              <i class="fa-solid fa-user-graduate" aria-hidden="true"></i>
+            </span>
+            <span class="bubble-label text-[10px] sm:text-xs font-bold text-utsa-navy text-center leading-tight">About</span>
+          </button>
+          <button type="button" data-bubble-nav="resume" onclick="navigate('resume')" class="bubble-btn flex flex-col items-center gap-1.5 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-1.5">
+            <span class="bubble-circle rounded-full bg-utsa-navy/10 border-2 border-utsa-navy/40 text-utsa-navy shadow-md shadow-utsa-navy/10 flex items-center justify-center group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
+              <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+            </span>
+            <span class="bubble-label text-[10px] sm:text-xs font-bold text-utsa-navy text-center leading-tight">Resume</span>
+          </button>
+          <button type="button" data-bubble-nav="clinical" onclick="navigate('clinical')" class="bubble-btn flex flex-col items-center gap-1.5 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-1.5">
+            <span class="bubble-circle rounded-full bg-utsa-orange/10 border-2 border-utsa-orange/45 text-utsa-orange shadow-md shadow-utsa-orange/15 flex items-center justify-center group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
+              <i class="fa-solid fa-chalkboard-user" aria-hidden="true"></i>
+            </span>
+            <span class="bubble-label text-[10px] sm:text-xs font-bold text-utsa-navy text-center leading-tight">Clinical</span>
+          </button>
+          <button type="button" data-bubble-nav="lessons" onclick="navigate('lessons')" class="bubble-btn flex flex-col items-center gap-1.5 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-1.5">
+            <span class="bubble-circle rounded-full bg-utsa-navy/10 border-2 border-utsa-navy/40 text-utsa-navy shadow-md shadow-utsa-navy/10 flex items-center justify-center group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
+              <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+            </span>
+            <span class="bubble-label text-[10px] sm:text-xs font-bold text-utsa-navy text-center leading-tight">Lessons</span>
+          </button>
+          <button type="button" data-bubble-nav="management" onclick="navigate('management')" class="bubble-btn flex flex-col items-center gap-1.5 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-1.5">
+            <span class="bubble-circle rounded-full bg-utsa-navy/10 border-2 border-utsa-navy/40 text-utsa-navy shadow-md shadow-utsa-navy/10 flex items-center justify-center group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
+              <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+            </span>
+            <span class="bubble-label text-[10px] sm:text-xs font-bold text-utsa-navy text-center leading-tight">Manage</span>
+          </button>
+          <button type="button" data-bubble-nav="references" onclick="navigate('references')" class="bubble-btn flex flex-col items-center gap-1.5 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-1.5">
+            <span class="bubble-circle rounded-full bg-utsa-orange/10 border-2 border-utsa-orange/45 text-utsa-orange shadow-md shadow-utsa-orange/15 flex items-center justify-center group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
+              <i class="fa-solid fa-user-check" aria-hidden="true"></i>
+            </span>
+            <span class="bubble-label text-[10px] sm:text-xs font-bold text-utsa-navy text-center leading-tight">Refs</span>
+          </button>
+        </div>
+      </nav>
+
+      <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+        <ul class="divide-y divide-slate-100">
+          <li class="py-4 first:pt-0 last:pb-0 flex items-start gap-4">
+            <span class="mt-0.5 w-10 h-10 shrink-0 rounded-full bg-utsa-navy/10 text-utsa-navy flex items-center justify-center" aria-hidden="true">
+              <i class="fa-solid fa-envelope"></i>
+            </span>
+            <div class="min-w-0">
+              <p class="text-xs font-bold uppercase tracking-wider text-utsa-orange">School Email</p>
+              <a href="mailto:roderek.young@my.utsa.edu" class="text-sm sm:text-base font-semibold text-utsa-navy hover:text-utsa-orange transition break-all">roderek.young@my.utsa.edu</a>
+            </div>
+          </li>
+          <li class="py-4 first:pt-0 last:pb-0 flex items-start gap-4">
+            <span class="mt-0.5 w-10 h-10 shrink-0 rounded-full bg-utsa-navy/10 text-utsa-navy flex items-center justify-center" aria-hidden="true">
+              <i class="fa-solid fa-envelope-open-text"></i>
+            </span>
+            <div class="min-w-0">
+              <p class="text-xs font-bold uppercase tracking-wider text-utsa-orange">Personal Email</p>
+              <a href="mailto:roderek.young@gmail.com" class="text-sm sm:text-base font-semibold text-utsa-navy hover:text-utsa-orange transition break-all">roderek.young@gmail.com</a>
+            </div>
+          </li>
+          <li class="py-4 first:pt-0 last:pb-0 flex items-start gap-4">
+            <span class="mt-0.5 w-10 h-10 shrink-0 rounded-full bg-utsa-orange/10 text-utsa-orange flex items-center justify-center" aria-hidden="true">
+              <i class="fa-solid fa-phone"></i>
+            </span>
+            <div class="min-w-0">
+              <p class="text-xs font-bold uppercase tracking-wider text-utsa-orange">Personal Phone</p>
+              <a href="tel:+18303830044" class="text-sm sm:text-base font-semibold text-utsa-navy hover:text-utsa-orange transition">(830) 383-0044</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
   </main>
 
   <!-- FOOTER -->
@@ -1089,7 +1179,7 @@
 
   <script>
     (function () {
-      var VIEWS = ['home', 'about', 'resume', 'clinical', 'lessons', 'management', 'references'];
+      var VIEWS = ['home', 'about', 'resume', 'clinical', 'lessons', 'management', 'references', 'contact'];
       var FADE_MS = 300;
       var navigating = false;
 
