@@ -59,6 +59,10 @@
         height: 6.5rem;
       }
     }
+
+    .sac-bar-track { height: 0.65rem; background: #e2e8f0; border-radius: 9999px; overflow: hidden; }
+    .sac-bar-fill { height: 100%; border-radius: 9999px; background: #0C2340; }
+    .sac-bar-fill.post { background: #F15A22; }
     .headshot-ring {
       box-shadow: 0 0 0 4px #FFFFFF, 0 0 0 7px #F15A22;
     }
@@ -442,7 +446,7 @@
       <!-- Detail panels (list-first: empty until a card is chosen) -->
       <div id="lesson-detail-host" class="min-h-[2rem]">
         <div id="lesson-detail-empty" class="lesson-subpanel lesson-sub-active rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-          <p class="text-sm text-slate-500">Select a lesson above to view TEKS, ELPS, and observation notes.</p>
+          <p class="text-sm text-slate-500">Select a lesson above to view what it covered, TEKS/ELPS, class SAC totals, and observation notes.</p>
         </div>
 
         <!-- POP 1 detail -->
@@ -451,7 +455,7 @@
             <div>
               <p class="text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-1">POP 1 · Formal Observation</p>
               <h3 class="text-xl font-black text-utsa-navy">Westward Expansion &amp; Manifest Destiny</h3>
-              <p class="text-sm text-slate-500 mt-1">Feb 5, 2026 · Rudder Middle School · 8th Grade U.S. History</p>
+              <p class="text-sm text-slate-500 mt-1">Feb 5, 2026 · Rudder Middle School · 8th Grade U.S. History · 45 min · 25 students</p>
             </div>
             <button type="button" onclick="showLesson(null)" class="text-xs font-bold text-utsa-navy hover:text-utsa-orange underline shrink-0">Clear selection</button>
           </div>
@@ -459,6 +463,59 @@
             <span class="px-3 py-1 bg-utsa-navy/10 text-utsa-navy border border-utsa-navy/20 rounded-full text-xs font-semibold">TEKS: 8.6(B), 8.10(A)(B)</span>
             <span class="px-3 py-1 bg-orange-50 text-utsa-orange border border-utsa-orange/30 rounded-full text-xs font-semibold">ELPS: 2C, 2G, 3D, 3E, 3H, 4D</span>
           </div>
+
+          <div class="space-y-4 max-w-3xl mb-6">
+            <h4 class="text-lg font-bold text-utsa-navy">What this lesson was about</h4>
+            <p class="text-sm text-slate-600">
+              45-minute 8th-grade U.S. History lesson on territorial expansion. Students identified major U.S. land acquisitions (1783–1853) and analyzed how geographic, economic, and political factors drove Manifest Destiny.
+            </p>
+            <ul class="text-sm text-slate-600 list-disc pl-5 space-y-1">
+              <li><strong class="text-utsa-navy">Central focus:</strong> Westward growth, Louisiana Purchase, and Manifest Destiny (TEKS 8.6(B), 8.10(A)(B)).</li>
+              <li><strong class="text-utsa-navy">Hook:</strong> Manifest Destiny fill-in-the-blank Do Now.</li>
+              <li><strong class="text-utsa-navy">Core task:</strong> Categorize acquisitions on maps/graphic organizers using Tier 2–3 vocabulary (acquisition, cession, annex).</li>
+              <li><strong class="text-utsa-navy">Materials:</strong> Slides, wall maps/photos, westward expansion organizers, journals.</li>
+            </ul>
+          </div>
+
+<div class="mt-6 mb-6">
+  <h4 class="text-lg font-bold text-utsa-navy mb-1">Student Achievement (class totals)</h4>
+  <p class="text-xs text-slate-500 mb-4">Pre/post performance bands on the land-acquisition categorization task. Class size <strong class="text-utsa-navy">n=25</strong>. Counts only — no student names or initials.</p>
+  <div class="overflow-x-auto rounded-xl border border-slate-200">
+    <table class="w-full text-sm text-left">
+      <thead class="bg-utsa-navy text-white text-xs uppercase tracking-wider">
+        <tr><th class="p-3">Level</th><th class="p-3">Pre</th><th class="p-3">Post</th><th class="p-3 min-w-[10rem]">Pre → Post</th></tr>
+      </thead><tbody class="divide-y divide-slate-100">
+        <tr class="bg-white">
+          <td class="p-3 font-bold text-utsa-navy">Level 3 (strong)</td>
+          <td class="p-3 text-slate-600">3/25 <span class="text-slate-400">(12%)</span></td>
+          <td class="p-3 text-slate-600">15/25 <span class="text-slate-400">(60%)</span></td>
+          <td class="p-3">
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:12%"></div></div></div>
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:60%"></div></div></div>
+            </div>
+          </td></tr>
+        <tr class="bg-white">
+          <td class="p-3 font-bold text-utsa-navy">Level 2 (developing)</td>
+          <td class="p-3 text-slate-600">15/25 <span class="text-slate-400">(60%)</span></td>
+          <td class="p-3 text-slate-600">5/25 <span class="text-slate-400">(20%)</span></td>
+          <td class="p-3">
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:60%"></div></div></div>
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:20%"></div></div></div>
+            </div>
+          </td></tr>
+        <tr class="bg-white">
+          <td class="p-3 font-bold text-utsa-navy">Level 1 (beginning)</td>
+          <td class="p-3 text-slate-600">7/25 <span class="text-slate-400">(28%)</span></td>
+          <td class="p-3 text-slate-600">5/25 <span class="text-slate-400">(20%)</span></td>
+          <td class="p-3">
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:28%"></div></div></div>
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:20%"></div></div></div>
+            </div>
+          </td></tr>
+      </tbody></table></div></div>
           <div class="grid sm:grid-cols-2 gap-4 text-sm mb-6">
             <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
               <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">CTESS Strength</p>
@@ -480,7 +537,7 @@
             <div>
               <p class="text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-1">POP 2 · Formal Observation</p>
               <h3 class="text-xl font-black text-utsa-navy">Civil War Review</h3>
-              <p class="text-sm text-slate-500 mt-1">Mar 31, 2026 · Rudder Middle School · 8th Grade U.S. History</p>
+              <p class="text-sm text-slate-500 mt-1">Mar 31, 2026 · Rudder Middle School · 8th Grade U.S. History · 45 min · 24 students</p>
             </div>
             <button type="button" onclick="showLesson(null)" class="text-xs font-bold text-utsa-navy hover:text-utsa-orange underline shrink-0">Clear selection</button>
           </div>
@@ -488,6 +545,59 @@
             <span class="px-3 py-1 bg-utsa-navy/10 text-utsa-navy border border-utsa-navy/20 rounded-full text-xs font-semibold">TEKS: 8.7(E), 8.8(A)–(C)</span>
             <span class="px-3 py-1 bg-orange-50 text-utsa-orange border border-utsa-orange/30 rounded-full text-xs font-semibold">ELPS: 1A, 3D, 5B</span>
           </div>
+
+          <div class="space-y-4 max-w-3xl mb-6">
+            <h4 class="text-lg font-bold text-utsa-navy">What this lesson was about</h4>
+            <p class="text-sm text-slate-600">
+              45-minute Civil War review before a unit assessment. Students analyzed causes, major events, and key individuals, then explained reasoning with grade-level vocabulary.
+            </p>
+            <ul class="text-sm text-slate-600 list-disc pl-5 space-y-1">
+              <li><strong class="text-utsa-navy">Central focus:</strong> Causes, events, and outcomes of the Civil War (TEKS 8.7(E), 8.8(A)–(C)).</li>
+              <li><strong class="text-utsa-navy">Hook:</strong> “Extension of Slavery” map warm-up with multiple-choice checks.</li>
+              <li><strong class="text-utsa-navy">Core task:</strong> Blooket review set on Chromebooks; written ticket explaining reasoning.</li>
+              <li><strong class="text-utsa-navy">Materials:</strong> Custom Blooket set, projector, Chromebooks.</li>
+            </ul>
+          </div>
+
+<div class="mt-6 mb-6">
+  <h4 class="text-lg font-bold text-utsa-navy mb-1">Student Achievement (class totals)</h4>
+  <p class="text-xs text-slate-500 mb-4">Pre/post performance bands on the Civil War review questions. Class size <strong class="text-utsa-navy">n=24</strong>. Counts only — no student names or initials.</p>
+  <div class="overflow-x-auto rounded-xl border border-slate-200">
+    <table class="w-full text-sm text-left">
+      <thead class="bg-utsa-navy text-white text-xs uppercase tracking-wider">
+        <tr><th class="p-3">Level</th><th class="p-3">Pre</th><th class="p-3">Post</th><th class="p-3 min-w-[10rem]">Pre → Post</th></tr>
+      </thead><tbody class="divide-y divide-slate-100">
+        <tr class="bg-white">
+          <td class="p-3 font-bold text-utsa-navy">Level 3 (strong)</td>
+          <td class="p-3 text-slate-600">3/24 <span class="text-slate-400">(12%)</span></td>
+          <td class="p-3 text-slate-600">14/24 <span class="text-slate-400">(58%)</span></td>
+          <td class="p-3">
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:12%"></div></div></div>
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:58%"></div></div></div>
+            </div>
+          </td></tr>
+        <tr class="bg-white">
+          <td class="p-3 font-bold text-utsa-navy">Level 2 (developing)</td>
+          <td class="p-3 text-slate-600">14/24 <span class="text-slate-400">(58%)</span></td>
+          <td class="p-3 text-slate-600">6/24 <span class="text-slate-400">(25%)</span></td>
+          <td class="p-3">
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:58%"></div></div></div>
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:25%"></div></div></div>
+            </div>
+          </td></tr>
+        <tr class="bg-white">
+          <td class="p-3 font-bold text-utsa-navy">Level 1 (beginning)</td>
+          <td class="p-3 text-slate-600">7/24 <span class="text-slate-400">(29%)</span></td>
+          <td class="p-3 text-slate-600">4/24 <span class="text-slate-400">(17%)</span></td>
+          <td class="p-3">
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:29%"></div></div></div>
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:17%"></div></div></div>
+            </div>
+          </td></tr>
+      </tbody></table></div></div>
           <div class="grid sm:grid-cols-2 gap-4 text-sm mb-6">
             <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
               <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">CTESS Strength</p>
@@ -503,13 +613,13 @@
           <p class="text-xs text-slate-500">Placement mentor: Brandy Shelton-Nentwich · Rudder Middle School</p>
         </div>
 
-        <!-- POP 3 detail (full sequence retained) -->
+        <!-- POP 3 detail -->
         <div id="lesson-detail-pop3" class="lesson-subpanel lesson-sub-hidden bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm" role="tabpanel" aria-labelledby="lesson-card-pop3">
           <div class="flex items-start justify-between gap-4 flex-wrap mb-6">
             <div>
               <p class="text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-1">POP 3 · Formal Observation</p>
               <h3 class="text-xl font-black text-utsa-navy">Freak the Mighty: Symbolism &amp; Coat of Arms</h3>
-              <p class="text-sm text-slate-500 mt-1">Sep 16, 2026 · Jefferson Middle School · 6th Grade ELAR</p>
+              <p class="text-sm text-slate-500 mt-1">Sep 16, 2026 · Jefferson Middle School · 6th Grade ELAR · 60 min · 30 students</p>
             </div>
             <button type="button" onclick="showLesson(null)" class="text-xs font-bold text-utsa-navy hover:text-utsa-orange underline shrink-0">Clear selection</button>
           </div>
@@ -519,9 +629,9 @@
             <span class="px-3 py-1 bg-slate-100 text-slate-600 border border-slate-200 rounded-full text-xs font-semibold">60 Minutes</span>
           </div>
           <div class="space-y-4 max-w-3xl mb-6">
-            <h4 class="text-lg font-bold text-utsa-navy">Lesson Objective &amp; Sequence</h4>
+            <h4 class="text-lg font-bold text-utsa-navy">What this lesson was about</h4>
             <p class="text-sm text-slate-600">
-              Students defined heraldic symbolism and explained how authors use knights, armor, and crests to represent character identity in <em>Freak the Mighty</em>, followed by designing a personal four-quadrant Coat of Arms.
+              Students defined heraldic symbolism and explained how authors use knights, armor, and crests to represent character identity in <em>Freak the Mighty</em>, then designed a personal four-quadrant Coat of Arms with a short written analysis.
             </p>
             <div class="grid sm:grid-cols-2 gap-3 text-xs text-slate-600">
               <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
@@ -538,6 +648,45 @@
               </div>
             </div>
           </div>
+<div class="mt-6 mb-6">
+  <h4 class="text-lg font-bold text-utsa-navy mb-1">Student Achievement (class totals)</h4>
+  <p class="text-xs text-slate-500 mb-4">Pre/post performance bands on Coat of Arms symbolism + written analysis. Class size <strong class="text-utsa-navy">n=30</strong>. Counts only — no student names or initials.</p>
+  <div class="overflow-x-auto rounded-xl border border-slate-200">
+    <table class="w-full text-sm text-left">
+      <thead class="bg-utsa-navy text-white text-xs uppercase tracking-wider">
+        <tr><th class="p-3">Level</th><th class="p-3">Pre</th><th class="p-3">Post</th><th class="p-3 min-w-[10rem]">Pre → Post</th></tr>
+      </thead><tbody class="divide-y divide-slate-100">
+        <tr class="bg-white">
+          <td class="p-3 font-bold text-utsa-navy">Level 3 (strong)</td>
+          <td class="p-3 text-slate-600">2/30 <span class="text-slate-400">(7%)</span></td>
+          <td class="p-3 text-slate-600">16/30 <span class="text-slate-400">(53%)</span></td>
+          <td class="p-3">
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:7%"></div></div></div>
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:53%"></div></div></div>
+            </div>
+          </td></tr>
+        <tr class="bg-white">
+          <td class="p-3 font-bold text-utsa-navy">Level 2 (developing)</td>
+          <td class="p-3 text-slate-600">20/30 <span class="text-slate-400">(67%)</span></td>
+          <td class="p-3 text-slate-600">21/30 <span class="text-slate-400">(70%)</span></td>
+          <td class="p-3">
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:67%"></div></div></div>
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:70%"></div></div></div>
+            </div>
+          </td></tr>
+        <tr class="bg-white">
+          <td class="p-3 font-bold text-utsa-navy">Level 1 (beginning)</td>
+          <td class="p-3 text-slate-600">8/30 <span class="text-slate-400">(27%)</span></td>
+          <td class="p-3 text-slate-600">3/30 <span class="text-slate-400">(10%)</span></td>
+          <td class="p-3">
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:27%"></div></div></div>
+              <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:10%"></div></div></div>
+            </div>
+          </td></tr>
+      </tbody></table></div></div>
           <div class="grid sm:grid-cols-2 gap-4 text-sm mb-6">
             <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
               <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">CTESS Strength</p>
