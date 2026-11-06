@@ -6,27 +6,40 @@
   <title>Roderek Young | Professional Teaching Portfolio</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            utsa: { navy: '#0C2340', orange: '#F15A22' }
+          }
+        }
+      }
+    }
+  </script>
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-    /* View transition animation (from index2 pattern) */
+    /* Soft crossfade between views (~300ms) */
     .view-panel {
-      transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.3s ease;
     }
     .view-hidden {
-      display: none !important;
+      display: none;
       opacity: 0;
-      transform: translateY(12px);
     }
     .view-active {
-      display: block !important;
+      display: block;
       opacity: 1;
-      transform: translateY(0);
     }
-    .nav-btn-active {
-      color: #93c5fd !important;
-      background-color: rgba(37, 99, 235, 0.25);
-      border: 1px solid rgba(59, 130, 246, 0.45);
+    .view-fading-out {
+      display: block;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .view-fading-in {
+      display: block;
+      opacity: 0;
     }
     .bubble-btn {
       transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
@@ -46,32 +59,78 @@
         height: 6.5rem;
       }
     }
+    .headshot-ring {
+      box-shadow: 0 0 0 4px #FFFFFF, 0 0 0 7px #F15A22;
+    }
+    .lesson-card {
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+    }
+    .lesson-card:hover,
+    .lesson-card:focus-visible {
+      transform: translateY(-2px);
+      outline: none;
+    }
+    .lesson-card-active {
+      border-color: #F15A22 !important;
+      background-color: rgba(241, 90, 34, 0.08) !important;
+      box-shadow: 0 0 0 2px rgba(241, 90, 34, 0.25);
+    }
+    .lesson-subpanel {
+      transition: opacity 0.3s ease;
+    }
+    .lesson-sub-hidden {
+      display: none;
+      opacity: 0;
+    }
+    .lesson-sub-active {
+      display: block;
+      opacity: 1;
+    }
+    .lesson-sub-fading-out {
+      display: block;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .lesson-sub-fading-in {
+      display: block;
+      opacity: 0;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .lesson-card,
+      .lesson-subpanel {
+        transition: none !important;
+      }
+      .lesson-card:hover,
+      .lesson-card:focus-visible {
+        transform: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .view-panel,
+      .bubble-btn {
+        transition: none !important;
+      }
+      .bubble-btn:hover,
+      .bubble-btn:focus-visible {
+        transform: none;
+      }
+    }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-blue-600 selection:text-white">
+<body class="bg-slate-50 text-utsa-navy min-h-screen flex flex-col font-sans antialiased selection:bg-utsa-orange selection:text-white">
 
-  <!-- NAVIGATION BAR (mirrors bubbles) -->
-  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+  <!-- BRAND BAR (no top section nav — bubbles are the hub) -->
+  <header class="sticky top-0 z-40 bg-utsa-navy/95 backdrop-blur-md border-b border-utsa-navy shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-      <button type="button" onclick="navigate('home')" class="flex items-center gap-3 text-left group shrink-0">
-        <span class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-black text-sm shadow-md group-hover:scale-105 transition-transform">RY</span>
+      <button type="button" onclick="navigate('home')" class="flex items-center gap-3 text-left group shrink-0" aria-label="Return to portfolio home">
+        <span class="w-9 h-9 rounded-full bg-utsa-orange text-white flex items-center justify-center font-black text-sm shadow-md group-hover:scale-105 transition-transform">RY</span>
         <div class="hidden sm:block">
           <span class="font-extrabold tracking-tight text-white block text-sm leading-tight">Roderek Young</span>
-          <span class="text-[10px] text-blue-400 font-semibold uppercase tracking-wider">ELAR / Social Studies 4–8</span>
+          <span class="text-[10px] text-orange-200 font-semibold uppercase tracking-wider">ELAR / Social Studies 4–8</span>
         </div>
       </button>
 
-      <nav class="hidden lg:flex items-center flex-wrap justify-center gap-1 text-[11px] font-bold uppercase tracking-wider text-slate-400" aria-label="Primary">
-        <button type="button" onclick="navigate('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-lg hover:text-white transition nav-btn-active">Home</button>
-        <button type="button" onclick="navigate('about')" id="nav-about" class="nav-btn px-3 py-2 rounded-lg hover:text-white transition">About</button>
-        <button type="button" onclick="navigate('resume')" id="nav-resume" class="nav-btn px-3 py-2 rounded-lg hover:text-white transition">Resume</button>
-        <button type="button" onclick="navigate('clinical')" id="nav-clinical" class="nav-btn px-3 py-2 rounded-lg hover:text-white transition">Clinical</button>
-        <button type="button" onclick="navigate('lessons')" id="nav-lessons" class="nav-btn px-3 py-2 rounded-lg hover:text-white transition">Lessons</button>
-        <button type="button" onclick="navigate('management')" id="nav-management" class="nav-btn px-3 py-2 rounded-lg hover:text-white transition">Management</button>
-        <button type="button" onclick="navigate('references')" id="nav-references" class="nav-btn px-3 py-2 rounded-lg hover:text-white transition">References</button>
-      </nav>
-
-      <a href="mailto:roderek.young@my.utsa.edu" class="text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold px-3.5 py-2 rounded-lg transition shadow-sm shrink-0">
+      <a href="mailto:roderek.young@my.utsa.edu" class="text-xs bg-utsa-orange hover:bg-orange-600 text-white font-semibold px-3.5 py-2 rounded-lg transition shadow-sm shrink-0">
         Contact Me
       </a>
     </div>
@@ -82,86 +141,96 @@
 
     <!-- VIEW: HOME — bubble hub -->
     <div id="view-home" class="view-panel view-active space-y-10" role="region" aria-label="Portfolio home">
-      <div class="relative rounded-3xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-900 border border-slate-800 p-8 md:p-12 overflow-hidden shadow-2xl text-center md:text-left">
-        <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="relative max-w-3xl mx-auto md:mx-0">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/60 border border-blue-700/50 text-blue-300 text-xs font-semibold mb-6">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            UTSA Educator Preparation Program • Fall 2026
+      <div class="relative rounded-3xl bg-white border border-slate-200 p-8 md:p-12 overflow-hidden shadow-lg text-center md:text-left">
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-utsa-orange/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-16 -top-16 w-64 h-64 bg-utsa-navy/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-10">
+          <img
+            src="assets/headshot.jpg"
+            alt="Roderek Young"
+            width="176"
+            height="176"
+            class="w-36 h-36 md:w-44 md:h-44 rounded-full object-cover border-[6px] border-utsa-navy headshot-ring shrink-0"
+          />
+          <div class="max-w-3xl mx-auto md:mx-0 flex-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-utsa-navy/5 border border-utsa-navy/20 text-utsa-navy text-xs font-semibold mb-6">
+              <span class="w-2 h-2 rounded-full bg-utsa-orange animate-pulse"></span>
+              UTSA Educator Preparation Program • Fall 2026
+            </div>
+            <h1 class="text-4xl md:text-5xl font-black text-utsa-navy tracking-tight mb-3">Roderek Young</h1>
+            <p class="text-utsa-orange text-base md:text-lg font-medium mb-3">
+              Clinical Teacher • 6th Grade ELAR &amp; 8th Grade U.S. History
+            </p>
+            <p class="text-slate-600 text-sm md:text-base leading-relaxed mb-2">
+              Choose a bubble below to open a portfolio section. Use <strong class="text-utsa-navy">Home</strong> anytime to return to this hub.
+            </p>
           </div>
-          <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-3">Roderek Young</h1>
-          <p class="text-blue-200 text-base md:text-lg font-medium mb-3">
-            Clinical Teacher • 6th Grade ELAR &amp; 8th Grade U.S. History
-          </p>
-          <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-2">
-            Choose a bubble below to open a portfolio section. Use <strong class="text-slate-200">Home</strong> anytime to return to this hub.
-          </p>
         </div>
 
-        <div class="relative grid grid-cols-2 sm:grid-cols-4 gap-3 mt-10 pt-8 border-t border-slate-800 text-left">
+        <div class="relative grid grid-cols-2 sm:grid-cols-4 gap-3 mt-10 pt-8 border-t border-slate-200 text-left">
           <div>
-            <div class="text-2xl md:text-3xl font-black text-blue-400">700+</div>
-            <div class="text-[11px] text-slate-400 uppercase font-bold mt-0.5">Clinical Hours</div>
+            <div class="text-2xl md:text-3xl font-black text-utsa-navy">700+</div>
+            <div class="text-[11px] text-slate-500 uppercase font-bold mt-0.5">Clinical Hours</div>
           </div>
           <div>
-            <div class="text-2xl md:text-3xl font-black text-emerald-400">PASSED</div>
-            <div class="text-[11px] text-slate-400 uppercase font-bold mt-0.5">TExES 113 (ELAR/SS)</div>
+            <div class="text-2xl md:text-3xl font-black text-utsa-orange">PASSED</div>
+            <div class="text-[11px] text-slate-500 uppercase font-bold mt-0.5">TExES 113 (ELAR/SS)</div>
           </div>
           <div>
-            <div class="text-2xl md:text-3xl font-black text-blue-300">NISD</div>
-            <div class="text-[11px] text-slate-400 uppercase font-bold mt-0.5">Residency Placements</div>
+            <div class="text-2xl md:text-3xl font-black text-utsa-navy">NISD</div>
+            <div class="text-[11px] text-slate-500 uppercase font-bold mt-0.5">Residency Placements</div>
           </div>
           <div>
-            <div class="text-2xl md:text-3xl font-black text-amber-400">Dec 2026</div>
-            <div class="text-[11px] text-slate-400 uppercase font-bold mt-0.5">B.A. in Education</div>
+            <div class="text-2xl md:text-3xl font-black text-utsa-orange">Dec 2026</div>
+            <div class="text-[11px] text-slate-500 uppercase font-bold mt-0.5">B.A. in Education</div>
           </div>
         </div>
       </div>
 
       <!-- Clickable bubble hub -->
       <div>
-        <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-6 text-center">Portfolio Sections</h2>
+        <h2 class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-6 text-center">Portfolio Sections</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 justify-items-center" role="navigation" aria-label="Section bubbles">
-          <button type="button" onclick="navigate('about')" class="bubble-btn flex flex-col items-center gap-3 group focus-visible:ring-2 focus-visible:ring-blue-400 rounded-2xl p-2">
-            <span class="bubble-circle rounded-full bg-blue-600/20 border-2 border-blue-500/60 text-blue-300 flex items-center justify-center text-2xl shadow-lg shadow-blue-900/40 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-400">
+          <button type="button" onclick="navigate('about')" class="bubble-btn flex flex-col items-center gap-3 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-2">
+            <span class="bubble-circle rounded-full bg-utsa-navy/10 border-2 border-utsa-navy/40 text-utsa-navy flex items-center justify-center text-2xl shadow-md shadow-utsa-navy/10 group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
               <i class="fa-solid fa-user-graduate" aria-hidden="true"></i>
             </span>
-            <span class="text-xs font-bold text-slate-200 text-center leading-tight">About</span>
+            <span class="text-xs font-bold text-utsa-navy text-center leading-tight">About</span>
           </button>
 
-          <button type="button" onclick="navigate('resume')" class="bubble-btn flex flex-col items-center gap-3 group focus-visible:ring-2 focus-visible:ring-blue-400 rounded-2xl p-2">
-            <span class="bubble-circle rounded-full bg-sky-600/20 border-2 border-sky-500/60 text-sky-300 flex items-center justify-center text-2xl shadow-lg shadow-sky-900/40 group-hover:bg-sky-600 group-hover:text-white group-hover:border-sky-400">
+          <button type="button" onclick="navigate('resume')" class="bubble-btn flex flex-col items-center gap-3 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-2">
+            <span class="bubble-circle rounded-full bg-utsa-navy/15 border-2 border-utsa-navy/50 text-utsa-navy flex items-center justify-center text-2xl shadow-md shadow-utsa-navy/10 group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
               <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
             </span>
-            <span class="text-xs font-bold text-slate-200 text-center leading-tight">Resume &amp;<br />Credentials</span>
+            <span class="text-xs font-bold text-utsa-navy text-center leading-tight">Resume &amp;<br />Credentials</span>
           </button>
 
-          <button type="button" onclick="navigate('clinical')" class="bubble-btn flex flex-col items-center gap-3 group focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-2xl p-2">
-            <span class="bubble-circle rounded-full bg-emerald-600/20 border-2 border-emerald-500/60 text-emerald-300 flex items-center justify-center text-2xl shadow-lg shadow-emerald-900/40 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-400">
+          <button type="button" onclick="navigate('clinical')" class="bubble-btn flex flex-col items-center gap-3 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-2">
+            <span class="bubble-circle rounded-full bg-utsa-orange/10 border-2 border-utsa-orange/50 text-utsa-orange flex items-center justify-center text-2xl shadow-md shadow-utsa-orange/15 group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
               <i class="fa-solid fa-chalkboard-user" aria-hidden="true"></i>
             </span>
-            <span class="text-xs font-bold text-slate-200 text-center leading-tight">Clinical<br />Overview</span>
+            <span class="text-xs font-bold text-utsa-navy text-center leading-tight">Clinical<br />Overview</span>
           </button>
 
-          <button type="button" onclick="navigate('lessons')" class="bubble-btn flex flex-col items-center gap-3 group focus-visible:ring-2 focus-visible:ring-violet-400 rounded-2xl p-2">
-            <span class="bubble-circle rounded-full bg-violet-600/20 border-2 border-violet-500/60 text-violet-300 flex items-center justify-center text-2xl shadow-lg shadow-violet-900/40 group-hover:bg-violet-600 group-hover:text-white group-hover:border-violet-400">
+          <button type="button" onclick="navigate('lessons')" class="bubble-btn flex flex-col items-center gap-3 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-2">
+            <span class="bubble-circle rounded-full bg-utsa-navy/10 border-2 border-utsa-navy/45 text-utsa-navy flex items-center justify-center text-2xl shadow-md shadow-utsa-navy/10 group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
               <i class="fa-solid fa-book-open" aria-hidden="true"></i>
             </span>
-            <span class="text-xs font-bold text-slate-200 text-center leading-tight">Sample<br />Lessons</span>
+            <span class="text-xs font-bold text-utsa-navy text-center leading-tight">Sample<br />Lessons</span>
           </button>
 
-          <button type="button" onclick="navigate('management')" class="bubble-btn flex flex-col items-center gap-3 group focus-visible:ring-2 focus-visible:ring-purple-400 rounded-2xl p-2">
-            <span class="bubble-circle rounded-full bg-purple-600/20 border-2 border-purple-500/60 text-purple-300 flex items-center justify-center text-2xl shadow-lg shadow-purple-900/40 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-400">
+          <button type="button" onclick="navigate('management')" class="bubble-btn flex flex-col items-center gap-3 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-2">
+            <span class="bubble-circle rounded-full bg-utsa-navy/15 border-2 border-utsa-navy/50 text-utsa-navy flex items-center justify-center text-2xl shadow-md shadow-utsa-navy/10 group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
               <i class="fa-solid fa-list-check" aria-hidden="true"></i>
             </span>
-            <span class="text-xs font-bold text-slate-200 text-center leading-tight">Management</span>
+            <span class="text-xs font-bold text-utsa-navy text-center leading-tight">Management</span>
           </button>
 
-          <button type="button" onclick="navigate('references')" class="bubble-btn flex flex-col items-center gap-3 group focus-visible:ring-2 focus-visible:ring-amber-400 rounded-2xl p-2">
-            <span class="bubble-circle rounded-full bg-amber-600/20 border-2 border-amber-500/60 text-amber-300 flex items-center justify-center text-2xl shadow-lg shadow-amber-900/40 group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-400">
+          <button type="button" onclick="navigate('references')" class="bubble-btn flex flex-col items-center gap-3 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-2">
+            <span class="bubble-circle rounded-full bg-utsa-orange/10 border-2 border-utsa-orange/45 text-utsa-orange flex items-center justify-center text-2xl shadow-md shadow-utsa-orange/15 group-hover:bg-utsa-orange group-hover:text-white group-hover:border-utsa-orange">
               <i class="fa-solid fa-user-check" aria-hidden="true"></i>
             </span>
-            <span class="text-xs font-bold text-slate-200 text-center leading-tight">References</span>
+            <span class="text-xs font-bold text-utsa-navy text-center leading-tight">References</span>
           </button>
         </div>
       </div>
@@ -169,130 +238,111 @@
 
     <!-- VIEW: ABOUT -->
     <div id="view-about" class="view-panel view-hidden space-y-8" role="region" aria-label="About">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4 gap-4 flex-wrap">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4 gap-4 flex-wrap">
         <div>
-          <button type="button" onclick="navigate('home')" class="text-xs font-bold text-blue-400 hover:underline mb-1">&larr; Home / All sections</button>
-          <h2 class="text-2xl font-black text-white">About</h2>
-          <p class="text-slate-400 text-sm mt-1">Philosophy &amp; professional snapshot</p>
+          <button type="button" onclick="navigate('home')" class="text-xs font-bold text-utsa-orange hover:underline mb-1">&larr; Home / All sections</button>
+          <h2 class="text-2xl font-black text-utsa-navy">About</h2>
+          <p class="text-slate-500 text-sm mt-1">Philosophy &amp; professional snapshot</p>
         </div>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8">
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm">
         <div class="flex items-start gap-4">
-          <i class="fa-solid fa-quote-left text-blue-400 text-2xl mt-1" aria-hidden="true"></i>
+          <i class="fa-solid fa-quote-left text-utsa-orange text-2xl mt-1" aria-hidden="true"></i>
           <div>
-            <p class="text-base md:text-lg leading-relaxed text-slate-200 italic">
+            <p class="text-base md:text-lg leading-relaxed text-slate-700 italic">
               "I teach because students deserve to see teachers who look like them. Growing up, I never had a teacher who was Black, a man, or a Black man. I want my students to have that. I believe connection is what makes students feel safe and willing to learn."
             </p>
-            <p class="mt-4 text-xs tracking-wider uppercase font-semibold text-blue-400">— Roderek Young, Professional Portfolio</p>
+            <p class="mt-4 text-xs tracking-wider uppercase font-semibold text-utsa-navy">— Roderek Young, Professional Portfolio</p>
           </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <p class="text-2xl font-bold text-blue-400">700+</p>
-          <p class="text-xs text-slate-400 mt-1">Clinical Teaching Hours</p>
-        </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <p class="text-2xl font-bold text-emerald-400">PASSED</p>
-          <p class="text-xs text-slate-400 mt-1">TExES 113 (ELAR/SS 4–8)</p>
-        </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <p class="text-2xl font-bold text-blue-300">Northside ISD</p>
-          <p class="text-xs text-slate-400 mt-1">Residency Placements</p>
-        </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <p class="text-2xl font-bold text-amber-400">Dec 2026</p>
-          <p class="text-xs text-slate-400 mt-1">Bachelor of Arts in Education (UTSA)</p>
         </div>
       </div>
     </div>
 
     <!-- VIEW: RESUME & CREDENTIALS -->
     <div id="view-resume" class="view-panel view-hidden space-y-8" role="region" aria-label="Resume and credentials">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4 gap-4 flex-wrap">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4 gap-4 flex-wrap">
         <div>
-          <button type="button" onclick="navigate('home')" class="text-xs font-bold text-blue-400 hover:underline mb-1">&larr; Home / All sections</button>
-          <h2 class="text-2xl font-black text-white">Resume &amp; Credentials</h2>
-          <p class="text-slate-400 text-sm mt-1">Experience, degrees, and TEA certifications</p>
+          <button type="button" onclick="navigate('home')" class="text-xs font-bold text-utsa-orange hover:underline mb-1">&larr; Home / All sections</button>
+          <h2 class="text-2xl font-black text-utsa-navy">Resume &amp; Credentials</h2>
+          <p class="text-slate-500 text-sm mt-1">Experience, degrees, and TEA certifications</p>
         </div>
       </div>
 
       <div class="grid md:grid-cols-2 gap-8">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-          <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-chalkboard-user text-blue-400" aria-hidden="true"></i> Clinical Experience
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+          <h3 class="text-lg font-bold text-utsa-navy mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-chalkboard-user text-utsa-orange" aria-hidden="true"></i> Clinical Experience
           </h3>
           <div class="space-y-6 text-xs">
-            <div class="border-l-2 border-blue-500 pl-4">
-              <span class="text-[10px] font-semibold uppercase text-blue-400">Aug 2026 – Dec 2026</span>
-              <h4 class="font-bold text-white text-sm">Clinical Teacher, 6th Grade ELAR</h4>
-              <p class="text-slate-400 font-medium">Jefferson Middle School • Northside ISD (Mentor: Mrs. Michelle Cerna)</p>
-              <ul class="text-slate-300 mt-2 space-y-1 list-disc list-inside">
+            <div class="border-l-2 border-utsa-orange pl-4">
+              <span class="text-[10px] font-semibold uppercase text-utsa-orange">Aug 2026 – Dec 2026</span>
+              <h4 class="font-bold text-utsa-navy text-sm">Clinical Teacher, 6th Grade ELAR</h4>
+              <p class="text-slate-500 font-medium">Jefferson Middle School • Northside ISD (Mentor: Mrs. Michelle Cerna)</p>
+              <ul class="text-slate-600 mt-2 space-y-1 list-disc list-inside">
                 <li>Plans and delivers 90-minute blocks managing complete lesson cycle.</li>
                 <li>Co-plans TEKS-aligned instruction; implements Tier 2 dyslexia interventions.</li>
                 <li>Supports students with IEPs through sentence stems and preferential seating.</li>
               </ul>
             </div>
-            <div class="border-l-2 border-slate-700 pl-4">
-              <span class="text-[10px] font-semibold uppercase text-slate-400">Spring 2026</span>
-              <h4 class="font-bold text-white text-sm">Clinical Placement, 8th Grade U.S. History</h4>
-              <p class="text-slate-400 font-medium">Rudder Middle School • Northside ISD (Mentor: Brandy Shelton-Nentwich)</p>
+            <div class="border-l-2 border-utsa-navy/30 pl-4">
+              <span class="text-[10px] font-semibold uppercase text-slate-500">Spring 2026</span>
+              <h4 class="font-bold text-utsa-navy text-sm">Clinical Placement, 8th Grade U.S. History</h4>
+              <p class="text-slate-500 font-medium">Rudder Middle School • Northside ISD (Mentor: Brandy Shelton-Nentwich)</p>
             </div>
-            <div class="border-l-2 border-slate-700 pl-4">
-              <span class="text-[10px] font-semibold uppercase text-slate-400">Fall 2025</span>
-              <h4 class="font-bold text-white text-sm">Preclinical Observations</h4>
-              <p class="text-slate-400 font-medium">Harris MS &amp; Tejeda MS • North East ISD (7th ELAR / 8th Social Studies)</p>
+            <div class="border-l-2 border-utsa-navy/30 pl-4">
+              <span class="text-[10px] font-semibold uppercase text-slate-500">Fall 2025</span>
+              <h4 class="font-bold text-utsa-navy text-sm">Preclinical Observations</h4>
+              <p class="text-slate-500 font-medium">Harris MS &amp; Tejeda MS • North East ISD (7th ELAR / 8th Social Studies)</p>
             </div>
           </div>
         </div>
 
         <div class="space-y-6">
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <i class="fa-solid fa-award text-blue-400" aria-hidden="true"></i> Certification Status
+          <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-utsa-navy mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-award text-utsa-orange" aria-hidden="true"></i> Certification Status
             </h3>
             <div class="space-y-3 text-xs">
-              <div class="flex items-center justify-between p-3 bg-emerald-950/40 border border-emerald-800/80 rounded-lg gap-3">
+              <div class="flex items-center justify-between p-3 bg-orange-50 border border-utsa-orange/30 rounded-lg gap-3">
                 <div>
-                  <p class="text-sm font-bold text-emerald-100">TExES 113: ELAR / Social Studies 4–8</p>
-                  <p class="text-emerald-400/90">Passed May 28, 2026</p>
+                  <p class="text-sm font-bold text-utsa-navy">TExES 113: ELAR / Social Studies 4–8</p>
+                  <p class="text-utsa-orange">Passed May 28, 2026</p>
                 </div>
-                <span class="text-[10px] bg-emerald-600 text-white px-2.5 py-1 rounded-full font-bold shrink-0">Passed</span>
+                <span class="text-[10px] bg-utsa-orange text-white px-2.5 py-1 rounded-full font-bold shrink-0">Passed</span>
               </div>
-              <div class="flex items-center justify-between p-3 bg-amber-950/40 border border-amber-800/80 rounded-lg gap-3">
+              <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-lg gap-3">
                 <div>
-                  <p class="text-sm font-bold text-amber-100">Science of Teaching Reading (STR)</p>
-                  <p class="text-amber-400/90">TEA Certification Exam</p>
+                  <p class="text-sm font-bold text-utsa-navy">Science of Teaching Reading (STR)</p>
+                  <p class="text-slate-500">TEA Certification Exam</p>
                 </div>
-                <span class="text-[10px] bg-amber-600 text-white px-2.5 py-1 rounded-full font-bold shrink-0">In Progress</span>
+                <span class="text-[10px] bg-utsa-navy text-white px-2.5 py-1 rounded-full font-bold shrink-0">In Progress</span>
               </div>
-              <div class="flex items-center justify-between p-3 bg-blue-950/40 border border-blue-800/80 rounded-lg gap-3">
+              <div class="flex items-center justify-between p-3 bg-utsa-navy/5 border border-utsa-navy/20 rounded-lg gap-3">
                 <div>
-                  <p class="text-sm font-bold text-blue-100">PPR (160) &amp; ESL Supplemental</p>
-                  <p class="text-blue-400/90">Pedagogy and Professional Responsibilities</p>
+                  <p class="text-sm font-bold text-utsa-navy">PPR (160) &amp; ESL Supplemental</p>
+                  <p class="text-slate-500">Pedagogy and Professional Responsibilities</p>
                 </div>
-                <span class="text-[10px] bg-blue-700 text-white px-2.5 py-1 rounded-full font-bold shrink-0">Testing by Dec 2026</span>
+                <span class="text-[10px] bg-utsa-navy text-white px-2.5 py-1 rounded-full font-bold shrink-0">Testing by Dec 2026</span>
               </div>
             </div>
           </div>
 
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-            <h3 class="text-sm font-bold uppercase text-slate-400 tracking-wider mb-3">Education</h3>
-            <p class="text-sm font-bold text-white">The University of Texas at San Antonio (UTSA)</p>
-            <p class="text-xs text-slate-400 mt-1">Bachelor of Arts in Education (ELAR &amp; Social Studies 4–8) • Expected Dec 2026</p>
+          <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <h3 class="text-sm font-bold uppercase text-slate-500 tracking-wider mb-3">Education</h3>
+            <p class="text-sm font-bold text-utsa-navy">The University of Texas at San Antonio (UTSA)</p>
+            <p class="text-xs text-slate-500 mt-1">Bachelor of Arts in Education (ELAR &amp; Social Studies 4–8) • Expected Dec 2026</p>
           </div>
 
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-            <h3 class="text-sm font-bold uppercase text-slate-400 tracking-wider mb-3">Completed 2026 Professional Trainings</h3>
-            <ul class="text-xs space-y-2 text-slate-300">
-              <li class="flex justify-between border-b pb-1.5 border-slate-800 gap-3"><span>TEA Dyslexia Training (6 CPE Hours)</span><span class="text-slate-500 font-mono shrink-0">May 3, 2026</span></li>
-              <li class="flex justify-between border-b pb-1.5 border-slate-800 gap-3"><span>AS+K? Basic Community Helper Suicide Prevention</span><span class="text-slate-500 font-mono shrink-0">Apr 27, 2026</span></li>
-              <li class="flex justify-between border-b pb-1.5 border-slate-800 gap-3"><span>Intro to Substance Abuse Prevention (Pre-SAPST)</span><span class="text-slate-500 font-mono shrink-0">Apr 27, 2026</span></li>
-              <li class="flex justify-between border-b pb-1.5 border-slate-800 gap-3"><span>Texas Behavior Support Initiative (TBSI - 3 CPE)</span><span class="text-slate-500 font-mono shrink-0">Mar 5, 2026</span></li>
-              <li class="flex justify-between border-b pb-1.5 border-slate-800 gap-3"><span>Youth Mental Health First Aid USA (6 Contact Hours)</span><span class="text-slate-500 font-mono shrink-0">Feb 27, 2026</span></li>
-              <li class="flex justify-between gap-3"><span>Texas Educators' Code of Ethics (UTSA COEHD)</span><span class="text-slate-500 font-mono shrink-0">Feb 25, 2026</span></li>
+          <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <h3 class="text-sm font-bold uppercase text-slate-500 tracking-wider mb-3">Completed 2026 Professional Trainings</h3>
+            <ul class="text-xs space-y-2 text-slate-600">
+              <li class="flex justify-between border-b pb-1.5 border-slate-100 gap-3"><span>TEA Dyslexia Training (6 CPE Hours)</span><span class="text-slate-400 font-mono shrink-0">May 3, 2026</span></li>
+              <li class="flex justify-between border-b pb-1.5 border-slate-100 gap-3"><span>AS+K? Basic Community Helper Suicide Prevention</span><span class="text-slate-400 font-mono shrink-0">Apr 27, 2026</span></li>
+              <li class="flex justify-between border-b pb-1.5 border-slate-100 gap-3"><span>Intro to Substance Abuse Prevention (Pre-SAPST)</span><span class="text-slate-400 font-mono shrink-0">Apr 27, 2026</span></li>
+              <li class="flex justify-between border-b pb-1.5 border-slate-100 gap-3"><span>Texas Behavior Support Initiative (TBSI - 3 CPE)</span><span class="text-slate-400 font-mono shrink-0">Mar 5, 2026</span></li>
+              <li class="flex justify-between border-b pb-1.5 border-slate-100 gap-3"><span>Youth Mental Health First Aid USA (6 Contact Hours)</span><span class="text-slate-400 font-mono shrink-0">Feb 27, 2026</span></li>
+              <li class="flex justify-between gap-3"><span>Texas Educators' Code of Ethics (UTSA COEHD)</span><span class="text-slate-400 font-mono shrink-0">Feb 25, 2026</span></li>
             </ul>
           </div>
         </div>
@@ -301,17 +351,17 @@
 
     <!-- VIEW: CLINICAL OVERVIEW -->
     <div id="view-clinical" class="view-panel view-hidden space-y-8" role="region" aria-label="Clinical overview">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4 gap-4 flex-wrap">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4 gap-4 flex-wrap">
         <div>
-          <button type="button" onclick="navigate('home')" class="text-xs font-bold text-blue-400 hover:underline mb-1">&larr; Home / All sections</button>
-          <h2 class="text-2xl font-black text-white">Clinical Overview</h2>
-          <p class="text-slate-400 text-sm mt-1">Residency pathway &amp; formal observations (Supervisor: Adrian Grant, UTSA COEHD)</p>
+          <button type="button" onclick="navigate('home')" class="text-xs font-bold text-utsa-orange hover:underline mb-1">&larr; Home / All sections</button>
+          <h2 class="text-2xl font-black text-utsa-navy">Clinical Overview</h2>
+          <p class="text-slate-500 text-sm mt-1">Residency pathway &amp; formal observations (Supervisor: Adrian Grant, UTSA COEHD)</p>
         </div>
       </div>
 
-      <div class="overflow-x-auto bg-slate-900 rounded-2xl border border-slate-800 shadow-sm">
+      <div class="overflow-x-auto bg-white rounded-2xl border border-slate-200 shadow-sm">
         <table class="w-full text-left text-xs md:text-sm">
-          <thead class="bg-slate-950/80 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+          <thead class="bg-utsa-navy text-white uppercase tracking-wider font-semibold">
             <tr>
               <th class="p-4">Observation</th>
               <th class="p-4">Date &amp; Campus</th>
@@ -320,27 +370,27 @@
               <th class="p-4">Targeted Next Step</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-800 text-slate-300">
+          <tbody class="divide-y divide-slate-100 text-slate-600">
             <tr>
-              <td class="p-4 font-bold text-blue-300">POP 1</td>
+              <td class="p-4 font-bold text-utsa-navy">POP 1</td>
               <td class="p-4">Feb 5, 2026 • Rudder MS</td>
-              <td class="p-4 font-medium text-slate-100">Westward Expansion &amp; Manifest Destiny</td>
-              <td class="p-4"><span class="px-2 py-1 bg-blue-950 text-blue-300 rounded font-semibold text-xs border border-blue-800">3.1 Environment</span> Routines established</td>
-              <td class="p-4 text-slate-400">Consistent attention signal and wait time.</td>
+              <td class="p-4 font-medium text-utsa-navy">Westward Expansion &amp; Manifest Destiny</td>
+              <td class="p-4"><span class="px-2 py-1 bg-utsa-navy/10 text-utsa-navy rounded font-semibold text-xs border border-utsa-navy/20">3.1 Environment</span> Routines established</td>
+              <td class="p-4 text-slate-500">Consistent attention signal and wait time.</td>
             </tr>
             <tr>
-              <td class="p-4 font-bold text-blue-300">POP 2</td>
+              <td class="p-4 font-bold text-utsa-navy">POP 2</td>
               <td class="p-4">Mar 31, 2026 • Rudder MS</td>
-              <td class="p-4 font-medium text-slate-100">Civil War Review</td>
-              <td class="p-4"><span class="px-2 py-1 bg-blue-950 text-blue-300 rounded font-semibold text-xs border border-blue-800">1.1 Standards</span> Proficient in 11/21 dimensions</td>
-              <td class="p-4 text-slate-400">Intentional checks for understanding in real-time.</td>
+              <td class="p-4 font-medium text-utsa-navy">Civil War Review</td>
+              <td class="p-4"><span class="px-2 py-1 bg-utsa-navy/10 text-utsa-navy rounded font-semibold text-xs border border-utsa-navy/20">1.1 Standards</span> Strong content review</td>
+              <td class="p-4 text-slate-500">Intentional checks for understanding in real-time.</td>
             </tr>
             <tr>
-              <td class="p-4 font-bold text-blue-300">POP 3</td>
+              <td class="p-4 font-bold text-utsa-navy">POP 3</td>
               <td class="p-4">Sep 16, 2026 • Jefferson MS</td>
-              <td class="p-4 font-medium text-slate-100">Freak the Mighty: Symbolism &amp; Coat of Arms</td>
-              <td class="p-4"><span class="px-2 py-1 bg-emerald-950 text-emerald-300 rounded font-semibold text-xs border border-emerald-800">1.1 Standards</span> Proficient in 8/16 rated dimensions</td>
-              <td class="p-4 text-slate-400">Display and verify expectations before activities.</td>
+              <td class="p-4 font-medium text-utsa-navy">Freak the Mighty: Symbolism &amp; Coat of Arms</td>
+              <td class="p-4"><span class="px-2 py-1 bg-orange-50 text-utsa-orange rounded font-semibold text-xs border border-utsa-orange/30">1.1 Standards</span> Student ownership &amp; symbolism</td>
+              <td class="p-4 text-slate-500">Display and verify expectations before activities.</td>
             </tr>
           </tbody>
         </table>
@@ -349,107 +399,222 @@
       <p class="text-xs text-slate-500">Mentors on placement pages: Mrs. Michelle Cerna (Jefferson MS); Brandy Shelton-Nentwich (Rudder MS). Field supervisor: Adrian Grant.</p>
     </div>
 
-    <!-- VIEW: SAMPLE LESSONS -->
+    <!-- VIEW: SAMPLE LESSONS (POP 1–3 picker only) -->
     <div id="view-lessons" class="view-panel view-hidden space-y-8" role="region" aria-label="Sample lessons">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4 gap-4 flex-wrap">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4 gap-4 flex-wrap">
         <div>
-          <button type="button" onclick="navigate('home')" class="text-xs font-bold text-blue-400 hover:underline mb-1">&larr; Home / All sections</button>
-          <h2 class="text-2xl font-black text-white">Featured Lesson: POP 3</h2>
-          <p class="text-slate-400 text-sm mt-1">6th Grade ELAR • Character Analysis &amp; Coat of Arms</p>
+          <button type="button" onclick="navigate('home')" class="text-xs font-bold text-utsa-orange hover:underline mb-1">&larr; Home / All sections</button>
+          <h2 class="text-2xl font-black text-utsa-navy">Sample Lessons</h2>
+          <p class="text-slate-500 text-sm mt-1">Formal observations POP 1–3 · TEKS &amp; ELPS aligned</p>
         </div>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8">
-        <div class="flex flex-wrap gap-2 mb-6">
-          <span class="px-3 py-1 bg-blue-950 text-blue-300 border border-blue-800 rounded-full text-xs font-semibold">TEKS: 6.7(B), 6.6(E), 6.6(H)</span>
-          <span class="px-3 py-1 bg-purple-950 text-purple-300 border border-purple-800 rounded-full text-xs font-semibold">ELPS: 3E, 3H, 4F, 5F, 5G</span>
-          <span class="px-3 py-1 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-xs font-semibold">60 Minutes</span>
+      <!-- Lesson picker (always visible; selected card highlighted) -->
+      <div class="grid sm:grid-cols-3 gap-4" role="tablist" aria-label="Observed lessons">
+        <button type="button" id="lesson-card-pop1" role="tab" aria-selected="false" aria-controls="lesson-detail-pop1" onclick="showLesson('pop1')" class="lesson-card text-left bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:border-utsa-orange/60 focus-visible:ring-2 focus-visible:ring-utsa-orange">
+          <span class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-2">
+            <i class="fa-solid fa-chalkboard" aria-hidden="true"></i> POP 1
+          </span>
+          <h3 class="text-sm font-black text-utsa-navy leading-snug">Westward Expansion &amp; Manifest Destiny</h3>
+          <p class="text-xs text-slate-500 mt-2">Feb 5, 2026 · Rudder MS</p>
+          <p class="text-[11px] text-slate-400 mt-1">8th Grade U.S. History</p>
+        </button>
+
+        <button type="button" id="lesson-card-pop2" role="tab" aria-selected="false" aria-controls="lesson-detail-pop2" onclick="showLesson('pop2')" class="lesson-card text-left bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:border-utsa-orange/60 focus-visible:ring-2 focus-visible:ring-utsa-orange">
+          <span class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-2">
+            <i class="fa-solid fa-chalkboard" aria-hidden="true"></i> POP 2
+          </span>
+          <h3 class="text-sm font-black text-utsa-navy leading-snug">Civil War Review</h3>
+          <p class="text-xs text-slate-500 mt-2">Mar 31, 2026 · Rudder MS</p>
+          <p class="text-[11px] text-slate-400 mt-1">8th Grade U.S. History</p>
+        </button>
+
+        <button type="button" id="lesson-card-pop3" role="tab" aria-selected="false" aria-controls="lesson-detail-pop3" onclick="showLesson('pop3')" class="lesson-card text-left bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:border-utsa-orange/60 focus-visible:ring-2 focus-visible:ring-utsa-orange">
+          <span class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-2">
+            <i class="fa-solid fa-chalkboard" aria-hidden="true"></i> POP 3
+          </span>
+          <h3 class="text-sm font-black text-utsa-navy leading-snug">Freak the Mighty: Symbolism &amp; Coat of Arms</h3>
+          <p class="text-xs text-slate-500 mt-2">Sep 16, 2026 · Jefferson MS</p>
+          <p class="text-[11px] text-slate-400 mt-1">6th Grade ELAR</p>
+        </button>
+      </div>
+
+      <!-- Detail panels (list-first: empty until a card is chosen) -->
+      <div id="lesson-detail-host" class="min-h-[2rem]">
+        <div id="lesson-detail-empty" class="lesson-subpanel lesson-sub-active rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+          <p class="text-sm text-slate-500">Select a lesson above to view TEKS, ELPS, and observation notes.</p>
         </div>
 
-        <div class="space-y-4 max-w-3xl">
-          <h3 class="text-lg font-bold text-white">Lesson Objective &amp; Sequence</h3>
-          <p class="text-sm text-slate-300">
-            Students defined heraldic symbolism and explained how authors use knights, armor, and crests to represent character identity in <em>Freak the Mighty</em>, followed by designing a personal four-quadrant Coat of Arms.
-          </p>
-          <div class="grid sm:grid-cols-2 gap-3 text-xs text-slate-300">
-            <div class="p-3 bg-slate-950 rounded-lg border border-slate-800">
-              <strong class="text-slate-100">1. Hook:</strong> "Kevin's Arthur Clues" linking braces to armor.
+        <!-- POP 1 detail -->
+        <div id="lesson-detail-pop1" class="lesson-subpanel lesson-sub-hidden bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm" role="tabpanel" aria-labelledby="lesson-card-pop1">
+          <div class="flex items-start justify-between gap-4 flex-wrap mb-6">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-1">POP 1 · Formal Observation</p>
+              <h3 class="text-xl font-black text-utsa-navy">Westward Expansion &amp; Manifest Destiny</h3>
+              <p class="text-sm text-slate-500 mt-1">Feb 5, 2026 · Rudder Middle School · 8th Grade U.S. History</p>
             </div>
-            <div class="p-3 bg-slate-950 rounded-lg border border-slate-800">
-              <strong class="text-slate-100">2. Direct Instruction:</strong> Read-aloud Chapters 7–9; chivalric code.
+            <button type="button" onclick="showLesson(null)" class="text-xs font-bold text-utsa-navy hover:text-utsa-orange underline shrink-0">Clear selection</button>
+          </div>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="px-3 py-1 bg-utsa-navy/10 text-utsa-navy border border-utsa-navy/20 rounded-full text-xs font-semibold">TEKS: 8.6(B), 8.10(A)(B)</span>
+            <span class="px-3 py-1 bg-orange-50 text-utsa-orange border border-utsa-orange/30 rounded-full text-xs font-semibold">ELPS: 2C, 2G, 3D, 3E, 3H, 4D</span>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4 text-sm mb-6">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">CTESS Strength</p>
+              <p class="font-bold text-utsa-navy">3.1 Classroom Environment</p>
+              <p class="text-xs text-slate-600 mt-1">Routines established: students line up, enter, and start warm-ups.</p>
             </div>
-            <div class="p-3 bg-slate-950 rounded-lg border border-slate-800">
-              <strong class="text-slate-100">3. Pop Culture Bridge:</strong> Anime/gaming insignia (Asta / Black Clover).
-            </div>
-            <div class="p-3 bg-slate-950 rounded-lg border border-slate-800">
-              <strong class="text-slate-100">4. Application:</strong> 4-quadrant Coat of Arms &amp; sentence frames.
+            <div class="p-4 bg-orange-50/60 rounded-xl border border-utsa-orange/20">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Growth Focus</p>
+              <p class="font-bold text-utsa-navy">3.2 Managing Student Behavior</p>
+              <p class="text-xs text-slate-600 mt-1">Use a consistent class-wide attention signal and pause until all students are attentive.</p>
             </div>
           </div>
-          <p class="text-xs text-slate-500 pt-2">Placement mentor: Mrs. Michelle Cerna • Jefferson Middle School</p>
+          <p class="text-xs text-slate-500">Placement mentor: Brandy Shelton-Nentwich · Rudder Middle School</p>
+        </div>
+
+        <!-- POP 2 detail -->
+        <div id="lesson-detail-pop2" class="lesson-subpanel lesson-sub-hidden bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm" role="tabpanel" aria-labelledby="lesson-card-pop2">
+          <div class="flex items-start justify-between gap-4 flex-wrap mb-6">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-1">POP 2 · Formal Observation</p>
+              <h3 class="text-xl font-black text-utsa-navy">Civil War Review</h3>
+              <p class="text-sm text-slate-500 mt-1">Mar 31, 2026 · Rudder Middle School · 8th Grade U.S. History</p>
+            </div>
+            <button type="button" onclick="showLesson(null)" class="text-xs font-bold text-utsa-navy hover:text-utsa-orange underline shrink-0">Clear selection</button>
+          </div>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="px-3 py-1 bg-utsa-navy/10 text-utsa-navy border border-utsa-navy/20 rounded-full text-xs font-semibold">TEKS: 8.7(E), 8.8(A)–(C)</span>
+            <span class="px-3 py-1 bg-orange-50 text-utsa-orange border border-utsa-orange/30 rounded-full text-xs font-semibold">ELPS: 1A, 3D, 5B</span>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4 text-sm mb-6">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">CTESS Strength</p>
+              <p class="font-bold text-utsa-navy">1.1 Standards &amp; Alignment</p>
+              <p class="text-xs text-slate-600 mt-1">Strong content review and structured activities.</p>
+            </div>
+            <div class="p-4 bg-orange-50/60 rounded-xl border border-utsa-orange/20">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Growth Focus</p>
+              <p class="font-bold text-utsa-navy">2.5 Monitor &amp; Adjust</p>
+              <p class="text-xs text-slate-600 mt-1">Incorporate more intentional checks for understanding and adjusting instruction in real time.</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate-500">Placement mentor: Brandy Shelton-Nentwich · Rudder Middle School</p>
+        </div>
+
+        <!-- POP 3 detail (full sequence retained) -->
+        <div id="lesson-detail-pop3" class="lesson-subpanel lesson-sub-hidden bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm" role="tabpanel" aria-labelledby="lesson-card-pop3">
+          <div class="flex items-start justify-between gap-4 flex-wrap mb-6">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-1">POP 3 · Formal Observation</p>
+              <h3 class="text-xl font-black text-utsa-navy">Freak the Mighty: Symbolism &amp; Coat of Arms</h3>
+              <p class="text-sm text-slate-500 mt-1">Sep 16, 2026 · Jefferson Middle School · 6th Grade ELAR</p>
+            </div>
+            <button type="button" onclick="showLesson(null)" class="text-xs font-bold text-utsa-navy hover:text-utsa-orange underline shrink-0">Clear selection</button>
+          </div>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="px-3 py-1 bg-utsa-navy/10 text-utsa-navy border border-utsa-navy/20 rounded-full text-xs font-semibold">TEKS: 6.7(B), 6.6(E), 6.6(H)</span>
+            <span class="px-3 py-1 bg-orange-50 text-utsa-orange border border-utsa-orange/30 rounded-full text-xs font-semibold">ELPS: 3E, 3H, 4F, 5F, 5G</span>
+            <span class="px-3 py-1 bg-slate-100 text-slate-600 border border-slate-200 rounded-full text-xs font-semibold">60 Minutes</span>
+          </div>
+          <div class="space-y-4 max-w-3xl mb-6">
+            <h4 class="text-lg font-bold text-utsa-navy">Lesson Objective &amp; Sequence</h4>
+            <p class="text-sm text-slate-600">
+              Students defined heraldic symbolism and explained how authors use knights, armor, and crests to represent character identity in <em>Freak the Mighty</em>, followed by designing a personal four-quadrant Coat of Arms.
+            </p>
+            <div class="grid sm:grid-cols-2 gap-3 text-xs text-slate-600">
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <strong class="text-utsa-navy">1. Hook:</strong> "Kevin's Arthur Clues" linking braces to armor.
+              </div>
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <strong class="text-utsa-navy">2. Direct Instruction:</strong> Read-aloud Chapters 7–9; chivalric code.
+              </div>
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <strong class="text-utsa-navy">3. Pop Culture Bridge:</strong> Anime/gaming insignia (Asta / Black Clover).
+              </div>
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <strong class="text-utsa-navy">4. Application:</strong> 4-quadrant Coat of Arms &amp; sentence frames.
+              </div>
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4 text-sm mb-6">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">CTESS Strength</p>
+              <p class="font-bold text-utsa-navy">1.1 Standards &amp; Alignment</p>
+              <p class="text-xs text-slate-600 mt-1">Promotes student ownership, higher-level thinking, and meaningful understanding of character identity and symbolism.</p>
+            </div>
+            <div class="p-4 bg-orange-50/60 rounded-xl border border-utsa-orange/20">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Growth Focus</p>
+              <p class="font-bold text-utsa-navy">2.1 Achieving Expectations</p>
+              <p class="text-xs text-slate-600 mt-1">Clearly communicate, display, and check understanding of expectations before each activity.</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate-500">Placement mentor: Mrs. Michelle Cerna · Jefferson Middle School</p>
         </div>
       </div>
     </div>
 
     <!-- VIEW: MANAGEMENT -->
     <div id="view-management" class="view-panel view-hidden space-y-8" role="region" aria-label="Classroom management">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4 gap-4 flex-wrap">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4 gap-4 flex-wrap">
         <div>
-          <button type="button" onclick="navigate('home')" class="text-xs font-bold text-blue-400 hover:underline mb-1">&larr; Home / All sections</button>
-          <h2 class="text-2xl font-black text-white">Classroom Management</h2>
-          <p class="text-slate-400 text-sm mt-1">Expectations, redirection sequence, and differentiation</p>
+          <button type="button" onclick="navigate('home')" class="text-xs font-bold text-utsa-orange hover:underline mb-1">&larr; Home / All sections</button>
+          <h2 class="text-2xl font-black text-utsa-navy">Classroom Management</h2>
+          <p class="text-slate-500 text-sm mt-1">Expectations, redirection sequence, and differentiation</p>
         </div>
       </div>
 
       <div class="grid md:grid-cols-2 gap-8">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-          <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-list-check text-blue-400" aria-hidden="true"></i> Classroom Management Plan
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+          <h3 class="text-xl font-bold text-utsa-navy mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-utsa-orange" aria-hidden="true"></i> Classroom Management Plan
           </h3>
-          <p class="text-xs text-slate-400 italic mb-4">
+          <p class="text-xs text-slate-500 italic mb-4">
             "I don't talk over students. I wait for their attention, keep the routines the same every day, and give students the same respect I expect from them."
           </p>
-          <div class="space-y-2.5 text-xs text-slate-300">
-            <div class="p-2.5 bg-slate-950 rounded border-l-4 border-blue-500"><strong class="text-slate-100">1. Focus on your own choices.</strong></div>
-            <div class="p-2.5 bg-slate-950 rounded border-l-4 border-blue-500"><strong class="text-slate-100">2. Report only serious concerns to an adult.</strong></div>
-            <div class="p-2.5 bg-slate-950 rounded border-l-4 border-blue-500"><strong class="text-slate-100">3. "Mute people with your mind."</strong> Tune out distractions and stay out of trouble.</div>
-            <div class="p-2.5 bg-slate-950 rounded border-l-4 border-blue-500"><strong class="text-slate-100">4. Active speaker respect:</strong> Stay seated and quiet while instruction occurs.</div>
+          <div class="space-y-2.5 text-xs text-slate-600">
+            <div class="p-2.5 bg-slate-50 rounded border-l-4 border-utsa-navy"><strong class="text-utsa-navy">1. Focus on your own choices.</strong></div>
+            <div class="p-2.5 bg-slate-50 rounded border-l-4 border-utsa-navy"><strong class="text-utsa-navy">2. Report only serious concerns to an adult.</strong></div>
+            <div class="p-2.5 bg-slate-50 rounded border-l-4 border-utsa-navy"><strong class="text-utsa-navy">3. "Mute people with your mind."</strong> Tune out distractions and stay out of trouble.</div>
+            <div class="p-2.5 bg-slate-50 rounded border-l-4 border-utsa-navy"><strong class="text-utsa-navy">4. Active speaker respect:</strong> Stay seated and quiet while instruction occurs.</div>
           </div>
 
           <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mt-6 mb-2">Off-Task Redirection Sequence</h4>
           <div class="grid grid-cols-3 gap-2 text-center text-xs">
-            <div class="p-2 bg-slate-950 rounded border border-slate-800">
-              <span class="block font-bold text-blue-300">Step 1</span> Name &amp; Eye Contact
+            <div class="p-2 bg-slate-50 rounded border border-slate-200">
+              <span class="block font-bold text-utsa-navy">Step 1</span> Name &amp; Eye Contact
             </div>
-            <div class="p-2 bg-slate-950 rounded border border-slate-800">
-              <span class="block font-bold text-amber-400">Step 2</span> Redirect &amp; Move Seat
+            <div class="p-2 bg-orange-50 rounded border border-utsa-orange/30">
+              <span class="block font-bold text-utsa-orange">Step 2</span> Redirect &amp; Move Seat
             </div>
-            <div class="p-2 bg-slate-950 rounded border border-slate-800">
-              <span class="block font-bold text-red-400">Step 3</span> Assign Detention
+            <div class="p-2 bg-slate-50 rounded border border-slate-200">
+              <span class="block font-bold text-utsa-navy">Step 3</span> Assign Detention
             </div>
           </div>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-sm">
           <div>
-            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <i class="fa-solid fa-universal-access text-blue-400" aria-hidden="true"></i> Targeted Differentiation
+            <h3 class="text-xl font-bold text-utsa-navy mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-universal-access text-utsa-orange" aria-hidden="true"></i> Targeted Differentiation
             </h3>
-            <p class="text-sm text-slate-300 leading-relaxed mb-4">
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
               "I use sentence stems so every student has a way into writing and discussion, and I seat students on purpose so each one can focus and get support. Through Tier 2 dyslexia intervention and small-group instruction, I give students with IEPs and dyslexia the targeted support they need."
             </p>
-            <div class="space-y-3 text-xs text-slate-300">
-              <div class="p-3 bg-blue-950/40 rounded-lg border border-blue-900/60">
-                <strong class="text-slate-100">Sentence Stems &amp; Frames:</strong> Multi-tiered written stems providing accessible entry points for Emergent Bilinguals and SPED learners.
+            <div class="space-y-3 text-xs text-slate-600">
+              <div class="p-3 bg-utsa-navy/5 rounded-lg border border-utsa-navy/15">
+                <strong class="text-utsa-navy">Sentence Stems &amp; Frames:</strong> Multi-tiered written stems providing accessible entry points for Emergent Bilinguals and SPED learners.
               </div>
-              <div class="p-3 bg-blue-950/40 rounded-lg border border-blue-900/60">
-                <strong class="text-slate-100">Strategic Seating:</strong> Purposeful placement aligning peer helpers, proximity management, and low-distraction zones.
+              <div class="p-3 bg-utsa-navy/5 rounded-lg border border-utsa-navy/15">
+                <strong class="text-utsa-navy">Strategic Seating:</strong> Purposeful placement aligning peer helpers, proximity management, and low-distraction zones.
               </div>
-              <div class="p-3 bg-blue-950/40 rounded-lg border border-blue-900/60">
-                <strong class="text-slate-100">Small-Group Intervention:</strong> Targeted Tier 2 phonics, fluency, and comprehension reteaching during independent practice cycles.
+              <div class="p-3 bg-utsa-navy/5 rounded-lg border border-utsa-navy/15">
+                <strong class="text-utsa-navy">Small-Group Intervention:</strong> Targeted Tier 2 phonics, fluency, and comprehension reteaching during independent practice cycles.
               </div>
             </div>
           </div>
-          <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500 font-mono">
+          <div class="mt-6 pt-4 border-t border-slate-200 text-xs text-slate-500 font-mono">
             Daily Entry Routine: 1. Binder &amp; Pencil &rarr; 2. Seat &rarr; 3. Warm-up &rarr; 4. Lesson
           </div>
         </div>
@@ -458,19 +623,19 @@
 
     <!-- VIEW: REFERENCES (privacy locked) -->
     <div id="view-references" class="view-panel view-hidden space-y-8" role="region" aria-label="References">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4 gap-4 flex-wrap">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4 gap-4 flex-wrap">
         <div>
-          <button type="button" onclick="navigate('home')" class="text-xs font-bold text-blue-400 hover:underline mb-1">&larr; Home / All sections</button>
-          <h2 class="text-2xl font-black text-white">Professional References</h2>
-          <p class="text-slate-400 text-sm mt-1">Available upon request</p>
+          <button type="button" onclick="navigate('home')" class="text-xs font-bold text-utsa-orange hover:underline mb-1">&larr; Home / All sections</button>
+          <h2 class="text-2xl font-black text-utsa-navy">Professional References</h2>
+          <p class="text-slate-500 text-sm mt-1">Available upon request</p>
         </div>
       </div>
 
-      <div class="max-w-xl mx-auto bg-slate-900 p-8 rounded-2xl border border-slate-800 shadow-sm text-center">
-        <p class="text-slate-300 text-sm leading-relaxed">
+      <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-center">
+        <p class="text-slate-600 text-sm leading-relaxed">
           Professional references are available upon request.
         </p>
-        <a href="mailto:roderek.young@my.utsa.edu" class="inline-block mt-6 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
+        <a href="mailto:roderek.young@my.utsa.edu" class="inline-block mt-6 px-4 py-2 bg-utsa-orange hover:bg-orange-600 text-white text-xs font-semibold rounded-lg transition">
           Request via Email
         </a>
       </div>
@@ -479,43 +644,100 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="py-8 bg-slate-950 text-slate-500 text-center text-xs border-t border-slate-800 mt-auto">
-    <p>&copy; 2026 Roderek Young. All rights reserved.</p>
-    <p class="mt-1 text-slate-600">UTSA College of Education and Human Development • Clinical Teaching Portfolio</p>
+  <footer class="py-8 bg-utsa-navy text-slate-300 text-center text-xs border-t border-utsa-navy mt-auto">
+    <p class="text-white">&copy; 2026 Roderek Young. All rights reserved.</p>
+    <p class="mt-1 text-slate-400">UTSA College of Education and Human Development • Clinical Teaching Portfolio</p>
   </footer>
 
   <script>
     (function () {
       var VIEWS = ['home', 'about', 'resume', 'clinical', 'lessons', 'management', 'references'];
+      var FADE_MS = 300;
+      var navigating = false;
 
-      function navigate(viewId) {
-        if (VIEWS.indexOf(viewId) === -1) viewId = 'home';
+      function prefersReducedMotion() {
+        return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      }
 
-        VIEWS.forEach(function (id) {
-          var panel = document.getElementById('view-' + id);
-          if (!panel) return;
-          if (id === viewId) {
-            panel.classList.remove('view-hidden');
-            panel.classList.add('view-active');
-          } else {
-            panel.classList.remove('view-active');
-            panel.classList.add('view-hidden');
-          }
-        });
-
-        document.querySelectorAll('.nav-btn').forEach(function (btn) {
-          btn.classList.remove('nav-btn-active');
-        });
-        var activeNav = document.getElementById('nav-' + viewId);
-        if (activeNav) activeNav.classList.add('nav-btn-active');
-
+      function setHash(viewId) {
         if (history.replaceState) {
           history.replaceState(null, '', '#' + viewId);
         } else {
           location.hash = viewId;
         }
+      }
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      function showOnly(viewId) {
+        VIEWS.forEach(function (id) {
+          var panel = document.getElementById('view-' + id);
+          if (!panel) return;
+          panel.classList.remove('view-active', 'view-fading-out', 'view-fading-in');
+          if (id === viewId) {
+            panel.classList.remove('view-hidden');
+            panel.classList.add('view-active');
+            panel.style.opacity = '';
+          } else {
+            panel.classList.add('view-hidden');
+            panel.classList.remove('view-active');
+            panel.style.opacity = '';
+          }
+        });
+      }
+
+      function navigate(viewId) {
+        if (VIEWS.indexOf(viewId) === -1) viewId = 'home';
+
+        var current = document.querySelector('.view-panel.view-active');
+        var next = document.getElementById('view-' + viewId);
+        if (!next) return;
+
+        setHash(viewId);
+
+        if (!current || current === next) {
+          showOnly(viewId);
+          window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+          return;
+        }
+
+        if (navigating) {
+          showOnly(viewId);
+          navigating = false;
+          window.scrollTo({ top: 0, behavior: 'auto' });
+          return;
+        }
+
+        if (prefersReducedMotion()) {
+          showOnly(viewId);
+          window.scrollTo({ top: 0, behavior: 'auto' });
+          return;
+        }
+
+        navigating = true;
+        current.classList.remove('view-active');
+        current.classList.add('view-fading-out');
+        current.style.opacity = '0';
+
+        window.setTimeout(function () {
+          current.classList.remove('view-fading-out');
+          current.classList.add('view-hidden');
+          current.style.opacity = '';
+
+          next.classList.remove('view-hidden');
+          next.classList.add('view-fading-in', 'view-active');
+          next.style.opacity = '0';
+
+          // Force reflow so the fade-in runs
+          void next.offsetWidth;
+          next.style.opacity = '1';
+
+          window.setTimeout(function () {
+            next.classList.remove('view-fading-in');
+            next.style.opacity = '';
+            navigating = false;
+          }, FADE_MS);
+
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, FADE_MS);
       }
 
       function syncFromHash() {
@@ -524,7 +746,97 @@
         navigate(hash);
       }
 
+      var LESSONS = ['pop1', 'pop2', 'pop3'];
+      var lessonAnimating = false;
+      var activeLesson = null;
+
+      function showLesson(lessonId) {
+        if (lessonId !== null && LESSONS.indexOf(lessonId) === -1) return;
+
+        var targetId = lessonId ? ('lesson-detail-' + lessonId) : 'lesson-detail-empty';
+        var current = document.querySelector('.lesson-subpanel.lesson-sub-active');
+        var next = document.getElementById(targetId);
+        if (!next) return;
+
+        LESSONS.forEach(function (id) {
+          var card = document.getElementById('lesson-card-' + id);
+          if (!card) return;
+          var selected = lessonId === id;
+          card.classList.toggle('lesson-card-active', selected);
+          card.setAttribute('aria-selected', selected ? 'true' : 'false');
+        });
+
+        if (current === next) {
+          activeLesson = lessonId;
+          return;
+        }
+
+        function finish() {
+          activeLesson = lessonId;
+          lessonAnimating = false;
+        }
+
+        if (prefersReducedMotion()) {
+          document.querySelectorAll('.lesson-subpanel').forEach(function (panel) {
+            panel.classList.remove('lesson-sub-active', 'lesson-sub-fading-out', 'lesson-sub-fading-in');
+            panel.classList.add('lesson-sub-hidden');
+            panel.style.opacity = '';
+          });
+          next.classList.remove('lesson-sub-hidden');
+          next.classList.add('lesson-sub-active');
+          finish();
+          return;
+        }
+
+        if (lessonAnimating) {
+          document.querySelectorAll('.lesson-subpanel').forEach(function (panel) {
+            panel.classList.remove('lesson-sub-active', 'lesson-sub-fading-out', 'lesson-sub-fading-in');
+            panel.classList.add('lesson-sub-hidden');
+            panel.style.opacity = '';
+          });
+          next.classList.remove('lesson-sub-hidden');
+          next.classList.add('lesson-sub-active');
+          finish();
+          return;
+        }
+
+        lessonAnimating = true;
+        if (current) {
+          current.classList.remove('lesson-sub-active');
+          current.classList.add('lesson-sub-fading-out');
+          current.style.opacity = '0';
+        }
+
+        window.setTimeout(function () {
+          if (current) {
+            current.classList.remove('lesson-sub-fading-out');
+            current.classList.add('lesson-sub-hidden');
+            current.style.opacity = '';
+          }
+          next.classList.remove('lesson-sub-hidden');
+          next.classList.add('lesson-sub-fading-in', 'lesson-sub-active');
+          next.style.opacity = '0';
+          void next.offsetWidth;
+          next.style.opacity = '1';
+          window.setTimeout(function () {
+            next.classList.remove('lesson-sub-fading-in');
+            next.style.opacity = '';
+            finish();
+          }, FADE_MS);
+        }, current ? FADE_MS : 0);
+      }
+
+      // Reset lesson picker when leaving / entering Sample Lessons
+      var _navigate = navigate;
+      navigate = function (viewId) {
+        _navigate(viewId);
+        if (viewId === 'lessons') {
+          showLesson(null);
+        }
+      };
+
       window.navigate = navigate;
+      window.showLesson = showLesson;
       window.addEventListener('hashchange', syncFromHash);
       document.addEventListener('DOMContentLoaded', syncFromHash);
       if (document.readyState !== 'loading') syncFromHash();
