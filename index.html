@@ -20,9 +20,9 @@
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-    /* Soft crossfade between views (~300ms) */
+    /* View crossfade */
     .view-panel {
-      transition: opacity 0.3s ease;
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .view-hidden {
       display: none;
@@ -42,6 +42,7 @@
       opacity: 0;
     }
 
+    /* Bubble Nav */
     .bubble-nav-strip .bubble-circle { width: 2.75rem; height: 2.75rem; font-size: 0.95rem; }
     @media (min-width: 640px) {
       .bubble-nav-strip .bubble-circle { width: 3.25rem; height: 3.25rem; font-size: 1.1rem; }
@@ -73,12 +74,22 @@
       }
     }
 
-    .sac-bar-track { height: 0.65rem; background: #e2e8f0; border-radius: 9999px; overflow: hidden; }
-    .sac-bar-fill { height: 100%; border-radius: 9999px; background: #0C2340; }
+    /* SAC Progress Bar Track & Fill */
+    .sac-bar-track { height: 0.75rem; background: #e2e8f0; border-radius: 9999px; overflow: hidden; position: relative; }
+    .sac-bar-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: #0C2340;
+      width: 0%;
+      transition: width 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    }
     .sac-bar-fill.post { background: #F15A22; }
+
     .headshot-ring {
       box-shadow: 0 0 0 4px #FFFFFF, 0 0 0 7px #F15A22;
     }
+
+    /* Lesson Cards & Subpanels */
     .lesson-card {
       transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
     }
@@ -112,21 +123,32 @@
       display: block;
       opacity: 0;
     }
+
+    /* Modal Drawer Transitions */
+    .modal-backdrop {
+      transition: opacity 0.25s ease;
+    }
+    .modal-backdrop.hidden-modal {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .modal-backdrop.active-modal {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .lesson-card,
-      .lesson-subpanel {
-        transition: none !important;
-      }
-      .lesson-card:hover,
-      .lesson-card:focus-visible {
-        transform: none;
-      }
+      .lesson-subpanel,
       .view-panel,
-      .bubble-btn {
+      .bubble-btn,
+      .sac-bar-fill {
         transition: none !important;
       }
       .bubble-btn:hover,
-      .bubble-btn:focus-visible {
+      .bubble-btn:focus-visible,
+      .lesson-card:hover,
+      .lesson-card:focus-visible {
         transform: none;
       }
     }
@@ -145,16 +167,22 @@
         </div>
       </button>
 
-      <button type="button" onclick="navigate('contact')" class="text-xs bg-utsa-orange hover:bg-orange-600 text-white font-semibold px-3.5 py-2 rounded-lg transition shadow-sm shrink-0">
-        Contact Me
-      </button>
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="openDownloadCenter()" class="text-xs bg-slate-700/80 hover:bg-slate-700 text-white font-semibold px-3 py-2 rounded-lg transition shadow-sm flex items-center gap-1.5 border border-slate-600">
+          <i class="fa-solid fa-file-arrow-down text-utsa-orange"></i>
+          <span class="hidden sm:inline">Hiring Packet</span>
+        </button>
+        <button type="button" onclick="navigate('contact')" class="text-xs bg-utsa-orange hover:bg-orange-600 text-white font-semibold px-3.5 py-2 rounded-lg transition shadow-sm shrink-0">
+          Contact Me
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- MAIN APP CONTAINER -->
   <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-8">
 
-    <!-- SINGLE GLOBAL SUBNAV STRIP -->
+    <!-- GLOBAL PERSISTENT SUBNAV STRIP (Visible on all inner views) -->
     <nav id="global-subnav" class="bubble-nav-strip mb-8 hidden" aria-label="Section navigation">
       <div class="grid grid-cols-4 sm:grid-cols-7 gap-3 sm:gap-4 justify-items-center">
         <button type="button" data-bubble-nav="home" onclick="navigate('home')" class="bubble-btn flex flex-col items-center gap-1.5 group focus-visible:ring-2 focus-visible:ring-utsa-orange rounded-2xl p-1.5">
@@ -202,7 +230,7 @@
       </div>
     </nav>
 
-    <!-- VIEW: HOME -->
+    <!-- VIEW: HOME (Central Hub) -->
     <div id="view-home" class="view-panel view-active space-y-10" role="region" aria-label="Portfolio home">
       <div class="relative rounded-3xl bg-white border border-slate-200 p-8 md:p-12 overflow-hidden shadow-lg text-center md:text-left">
         <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-utsa-orange/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -214,7 +242,7 @@
             alt="Roderek Young"
             width="176"
             height="176"
-            class="w-36 h-36 md:w-44 md:h-44 rounded-full object-cover border-[6px] border-utsa-navy headshot-ring shrink-0"
+            class="w-36 h-36 md:w-44 md:h-44 rounded-full object-cover border-[6px] border-utsa-navy headshot-ring shrink-0 shadow-md"
           />
           <div class="max-w-3xl mx-auto md:mx-0 flex-1">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-utsa-navy/5 border border-utsa-navy/20 text-utsa-navy text-xs font-semibold mb-6">
@@ -225,32 +253,41 @@
             <p class="text-utsa-orange text-base md:text-lg font-medium mb-3">
               Clinical Teacher • 6th Grade ELAR &amp; 8th Grade U.S. History
             </p>
-            <p class="text-slate-600 text-sm md:text-base leading-relaxed mb-2">
-              Choose a bubble below to open a portfolio section. Use <strong class="text-utsa-navy">Home</strong> anytime to return to this hub.
+            <p class="text-slate-600 text-sm md:text-base leading-relaxed mb-4">
+              Welcome to my digital teaching portfolio. Explore student growth metrics, TEKS-aligned instruction, classroom management, and evaluator feedback below.
             </p>
+            <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+              <button type="button" onclick="openDownloadCenter()" class="inline-flex items-center gap-2 px-4 py-2 bg-utsa-navy hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-sm transition">
+                <i class="fa-solid fa-folder-open text-utsa-orange"></i> One-Click Hiring Packet
+              </button>
+              <button type="button" onclick="navigate('lessons')" class="inline-flex items-center gap-2 px-4 py-2 bg-utsa-orange/10 hover:bg-utsa-orange/20 text-utsa-orange border border-utsa-orange/30 text-xs font-bold rounded-xl transition">
+                <i class="fa-solid fa-chart-line"></i> View Lesson Data
+              </button>
+            </div>
           </div>
         </div>
 
         <div class="relative grid grid-cols-2 sm:grid-cols-4 gap-3 mt-10 pt-8 border-t border-slate-200 text-left">
-          <div>
+          <div class="p-3 bg-slate-50/70 rounded-xl border border-slate-100">
             <div class="text-2xl md:text-3xl font-black text-utsa-navy">700+</div>
             <div class="text-[11px] text-slate-500 uppercase font-bold mt-0.5">Clinical Hours</div>
           </div>
-          <div>
+          <div class="p-3 bg-orange-50/50 rounded-xl border border-orange-100">
             <div class="text-2xl md:text-3xl font-black text-utsa-orange">PASSED</div>
             <div class="text-[11px] text-slate-500 uppercase font-bold mt-0.5">TExES 113 (ELAR/SS)</div>
           </div>
-          <div>
+          <div class="p-3 bg-slate-50/70 rounded-xl border border-slate-100">
             <div class="text-2xl md:text-3xl font-black text-utsa-navy">NISD</div>
             <div class="text-[11px] text-slate-500 uppercase font-bold mt-0.5">Residency Placements</div>
           </div>
-          <div>
+          <div class="p-3 bg-orange-50/50 rounded-xl border border-orange-100">
             <div class="text-2xl md:text-3xl font-black text-utsa-orange">Dec 2026</div>
             <div class="text-[11px] text-slate-500 uppercase font-bold mt-0.5">B.A. in Education</div>
           </div>
         </div>
       </div>
 
+      <!-- Hub Buttons -->
       <div>
         <h2 class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-6 text-center">Portfolio Sections</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 justify-items-center" role="navigation" aria-label="Section bubbles">
@@ -321,9 +358,14 @@
 
     <!-- VIEW: RESUME & CREDENTIALS -->
     <div id="view-resume" class="view-panel view-hidden space-y-8" role="region" aria-label="Resume and credentials">
-      <div class="border-b border-slate-200 pb-4">
-        <h2 class="text-2xl font-black text-utsa-navy">Resume &amp; Credentials</h2>
-        <p class="text-slate-500 text-sm mt-1">Experience, degrees, and TEA certifications</p>
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4 gap-4 flex-wrap">
+        <div>
+          <h2 class="text-2xl font-black text-utsa-navy">Resume &amp; Credentials</h2>
+          <p class="text-slate-500 text-sm mt-1">Experience, degrees, and TEA certifications</p>
+        </div>
+        <button type="button" onclick="openDownloadCenter()" class="text-xs bg-utsa-navy hover:bg-slate-800 text-white font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+          <i class="fa-solid fa-download text-utsa-orange"></i> Download Resume PDF
+        </button>
       </div>
 
       <div class="grid md:grid-cols-2 gap-8">
@@ -429,21 +471,36 @@
               <td class="p-4 font-bold text-utsa-navy">POP 1</td>
               <td class="p-4">Feb 5, 2026 • Rudder MS</td>
               <td class="p-4 font-medium text-utsa-navy">Westward Expansion &amp; Manifest Destiny</td>
-              <td class="p-4"><span class="px-2 py-1 bg-utsa-navy/10 text-utsa-navy rounded font-semibold text-xs border border-utsa-navy/20">3.1 Environment</span> Routines established</td>
+              <td class="p-4">
+                <button type="button" onclick="showRubricModal('3.1')" class="text-left group flex items-center gap-1.5">
+                  <span class="px-2 py-1 bg-utsa-navy/10 text-utsa-navy rounded font-semibold text-xs border border-utsa-navy/20 group-hover:border-utsa-orange transition">3.1 Environment</span>
+                  <i class="fa-solid fa-circle-info text-slate-400 group-hover:text-utsa-orange text-xs"></i>
+                </button>
+              </td>
               <td class="p-4 text-slate-500">Consistent attention signal and wait time.</td>
             </tr>
             <tr>
               <td class="p-4 font-bold text-utsa-navy">POP 2</td>
               <td class="p-4">Mar 31, 2026 • Rudder MS</td>
               <td class="p-4 font-medium text-utsa-navy">Civil War Review</td>
-              <td class="p-4"><span class="px-2 py-1 bg-utsa-navy/10 text-utsa-navy rounded font-semibold text-xs border border-utsa-navy/20">1.1 Standards</span> Strong content review</td>
+              <td class="p-4">
+                <button type="button" onclick="showRubricModal('1.1')" class="text-left group flex items-center gap-1.5">
+                  <span class="px-2 py-1 bg-utsa-navy/10 text-utsa-navy rounded font-semibold text-xs border border-utsa-navy/20 group-hover:border-utsa-orange transition">1.1 Standards</span>
+                  <i class="fa-solid fa-circle-info text-slate-400 group-hover:text-utsa-orange text-xs"></i>
+                </button>
+              </td>
               <td class="p-4 text-slate-500">Intentional checks for understanding in real-time.</td>
             </tr>
             <tr>
               <td class="p-4 font-bold text-utsa-navy">POP 3</td>
               <td class="p-4">Sep 16, 2026 • Jefferson MS</td>
               <td class="p-4 font-medium text-utsa-navy">Freak the Mighty: Symbolism &amp; Coat of Arms</td>
-              <td class="p-4"><span class="px-2 py-1 bg-orange-50 text-utsa-orange rounded font-semibold text-xs border border-utsa-orange/30">1.1 Standards</span> Student ownership &amp; symbolism</td>
+              <td class="p-4">
+                <button type="button" onclick="showRubricModal('1.1')" class="text-left group flex items-center gap-1.5">
+                  <span class="px-2 py-1 bg-orange-50 text-utsa-orange rounded font-semibold text-xs border border-utsa-orange/30 group-hover:border-utsa-navy transition">1.1 Standards</span>
+                  <i class="fa-solid fa-circle-info text-slate-400 group-hover:text-utsa-navy text-xs"></i>
+                </button>
+              </td>
               <td class="p-4 text-slate-500">Display and verify expectations before activities.</td>
             </tr>
           </tbody>
@@ -455,45 +512,53 @@
 
     <!-- VIEW: SAMPLE LESSONS -->
     <div id="view-lessons" class="view-panel view-hidden space-y-8" role="region" aria-label="Sample lessons">
-      <div class="border-b border-slate-200 pb-4">
-        <h2 class="text-2xl font-black text-utsa-navy">Sample Lessons</h2>
-        <p class="text-slate-500 text-sm mt-1">Formal observations POP 1–3 · TEKS &amp; ELPS aligned</p>
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4 gap-4 flex-wrap">
+        <div>
+          <h2 class="text-2xl font-black text-utsa-navy">Sample Lessons</h2>
+          <p class="text-slate-500 text-sm mt-1">Formal observations POP 1–3 · TEKS &amp; ELPS aligned</p>
+        </div>
       </div>
 
       <!-- Lesson picker tablist with ARIA keys -->
       <div class="grid sm:grid-cols-3 gap-4" role="tablist" aria-label="Observed lessons">
         <button type="button" id="lesson-card-pop1" role="tab" tabindex="0" aria-selected="false" aria-controls="lesson-detail-pop1" onclick="showLesson('pop1')" class="lesson-card text-left bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:border-utsa-orange/60 focus-visible:ring-2 focus-visible:ring-utsa-orange">
-          <span class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-2">
-            <i class="fa-solid fa-chalkboard" aria-hidden="true"></i> POP 1
-          </span>
+          <div class="flex items-center justify-between mb-2">
+            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-utsa-orange">
+              <i class="fa-solid fa-chalkboard" aria-hidden="true"></i> POP 1
+            </span>
+            <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-semibold">8th History</span>
+          </div>
           <h3 class="text-sm font-black text-utsa-navy leading-snug">Westward Expansion &amp; Manifest Destiny</h3>
           <p class="text-xs text-slate-500 mt-2">Feb 5, 2026 · Rudder MS</p>
-          <p class="text-[11px] text-slate-400 mt-1">8th Grade U.S. History</p>
         </button>
 
         <button type="button" id="lesson-card-pop2" role="tab" tabindex="-1" aria-selected="false" aria-controls="lesson-detail-pop2" onclick="showLesson('pop2')" class="lesson-card text-left bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:border-utsa-orange/60 focus-visible:ring-2 focus-visible:ring-utsa-orange">
-          <span class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-2">
-            <i class="fa-solid fa-chalkboard" aria-hidden="true"></i> POP 2
-          </span>
+          <div class="flex items-center justify-between mb-2">
+            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-utsa-orange">
+              <i class="fa-solid fa-chalkboard" aria-hidden="true"></i> POP 2
+            </span>
+            <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-semibold">8th History</span>
+          </div>
           <h3 class="text-sm font-black text-utsa-navy leading-snug">Civil War Review</h3>
           <p class="text-xs text-slate-500 mt-2">Mar 31, 2026 · Rudder MS</p>
-          <p class="text-[11px] text-slate-400 mt-1">8th Grade U.S. History</p>
         </button>
 
         <button type="button" id="lesson-card-pop3" role="tab" tabindex="-1" aria-selected="false" aria-controls="lesson-detail-pop3" onclick="showLesson('pop3')" class="lesson-card text-left bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:border-utsa-orange/60 focus-visible:ring-2 focus-visible:ring-utsa-orange">
-          <span class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-2">
-            <i class="fa-solid fa-chalkboard" aria-hidden="true"></i> POP 3
-          </span>
+          <div class="flex items-center justify-between mb-2">
+            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-utsa-orange">
+              <i class="fa-solid fa-chalkboard" aria-hidden="true"></i> POP 3
+            </span>
+            <span class="text-[10px] bg-orange-100 text-utsa-orange px-2 py-0.5 rounded-full font-semibold">6th ELAR</span>
+          </div>
           <h3 class="text-sm font-black text-utsa-navy leading-snug">Freak the Mighty: Symbolism &amp; Coat of Arms</h3>
           <p class="text-xs text-slate-500 mt-2">Sep 16, 2026 · Jefferson MS</p>
-          <p class="text-[11px] text-slate-400 mt-1">6th Grade ELAR</p>
         </button>
       </div>
 
       <!-- Detail panels -->
       <div id="lesson-detail-host" class="min-h-[2rem]">
         <div id="lesson-detail-empty" class="lesson-subpanel lesson-sub-active rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-          <p class="text-sm text-slate-500">Select a lesson above to view what it covered, TEKS/ELPS, class SAC totals, and observation notes.</p>
+          <p class="text-sm text-slate-500">Select a lesson above to view TEKS/ELPS alignment, student growth metrics, lesson outlines, and rubric feedback.</p>
         </div>
 
         <!-- POP 1 detail -->
@@ -504,33 +569,44 @@
               <h3 class="text-xl font-black text-utsa-navy">Westward Expansion &amp; Manifest Destiny</h3>
               <p class="text-sm text-slate-500 mt-1">Feb 5, 2026 · Rudder Middle School · 8th Grade U.S. History · 45 min · 25 students</p>
             </div>
-            <button type="button" onclick="showLesson(null)" class="text-xs font-bold text-utsa-navy hover:text-utsa-orange underline shrink-0">Clear selection</button>
+            <div class="flex items-center gap-2">
+              <a href="https://drive.google.com/file/d/11DKJRuVE-acVc_uYpEkTh7HJ5-XgwfGQ/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="text-xs font-bold bg-utsa-navy hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg transition inline-flex items-center gap-1.5">
+                <i class="fa-solid fa-file-pdf text-utsa-orange"></i> Lesson Plan &amp; SAC
+              </a>
+              <button type="button" onclick="showLesson(null)" class="text-xs font-bold text-slate-500 hover:text-utsa-orange underline shrink-0 px-2 py-1">Close</button>
+            </div>
           </div>
+
           <div class="flex flex-wrap gap-2 mb-6">
             <span class="px-3 py-1 bg-utsa-navy/10 text-utsa-navy border border-utsa-navy/20 rounded-full text-xs font-semibold">TEKS: 8.6(B), 8.10(A)(B)</span>
             <span class="px-3 py-1 bg-orange-50 text-utsa-orange border border-utsa-orange/30 rounded-full text-xs font-semibold">ELPS: 2C, 2G, 3D, 3E, 3H, 4D</span>
           </div>
 
           <div class="space-y-4 max-w-3xl mb-6">
-            <h4 class="text-lg font-bold text-utsa-navy">What this lesson was about</h4>
+            <h4 class="text-lg font-bold text-utsa-navy">What this lesson covered</h4>
             <p class="text-sm text-slate-600">
               45-minute 8th-grade U.S. History lesson on territorial expansion. Students identified major U.S. land acquisitions (1783–1853) and analyzed how geographic, economic, and political factors drove Manifest Destiny.
             </p>
             <ul class="text-sm text-slate-600 list-disc pl-5 space-y-1">
               <li><strong class="text-utsa-navy">Central focus:</strong> Westward growth, Louisiana Purchase, and Manifest Destiny (TEKS 8.6(B), 8.10(A)(B)).</li>
-              <li><strong class="text-utsa-navy">Hook:</strong> Manifest Destiny fill-in-the-blank Do Now.</li>
-              <li><strong class="text-utsa-navy">Core task:</strong> Categorize acquisitions on maps/graphic organizers using Tier 2–3 vocabulary (acquisition, cession, annex).</li>
-              <li><strong class="text-utsa-navy">Materials:</strong> Slides, wall maps/photos, westward expansion organizers, journals.</li>
+              <li><strong class="text-utsa-navy">Hook:</strong> Manifest Destiny fill-in-the-blank Do Now analyzing John O'Sullivan's concept.</li>
+              <li><strong class="text-utsa-navy">Core task:</strong> Interactive journal mapping organizing the 7 territories in chronological order using the mnemonic ULFTOMG ("You Left, OMG!").</li>
+              <li><strong class="text-utsa-navy">Exit Ticket:</strong> 4-column categorization sorting territories by acquisition method (War/Treaty, Bought, Annex, Ceded).</li>
             </ul>
           </div>
 
           <div class="mt-6 mb-6">
-            <h4 class="text-lg font-bold text-utsa-navy mb-1">Student Achievement (class totals)</h4>
-            <p class="text-xs text-slate-500 mb-4">Pre/post performance bands on the land-acquisition categorization task. Class size <strong class="text-utsa-navy">n=25</strong>. Counts only — no student names or initials.</p>
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-1">
+              <h4 class="text-lg font-bold text-utsa-navy">Student Achievement (class totals)</h4>
+              <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-black rounded-lg">
+                <i class="fa-solid fa-arrow-trend-up"></i> +48% Mastery Growth
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">Pre/post performance bands on the land-acquisition categorization task. Class size <strong class="text-utsa-navy">n=25</strong>. Aggregated counts only.</p>
             <div class="overflow-x-auto rounded-xl border border-slate-200">
               <table class="w-full text-sm text-left">
                 <thead class="bg-utsa-navy text-white text-xs uppercase tracking-wider">
-                  <tr><th class="p-3">Level</th><th class="p-3">Pre</th><th class="p-3">Post</th><th class="p-3 min-w-[10rem]">Pre → Post</th></tr>
+                  <tr><th class="p-3">Level</th><th class="p-3">Pre</th><th class="p-3">Post</th><th class="p-3 min-w-[12rem]">Pre → Post Distribution</th></tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                   <tr class="bg-white">
@@ -539,8 +615,8 @@
                     <td class="p-3 text-slate-600">15/25 <span class="text-slate-400">(60%)</span></td>
                     <td class="p-3">
                       <div class="space-y-1.5">
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:12%"></div></div></div>
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:60%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" data-width="12%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" data-width="60%"></div></div></div>
                       </div>
                     </td>
                   </tr>
@@ -550,8 +626,8 @@
                     <td class="p-3 text-slate-600">5/25 <span class="text-slate-400">(20%)</span></td>
                     <td class="p-3">
                       <div class="space-y-1.5">
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:60%"></div></div></div>
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:20%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" data-width="60%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" data-width="20%"></div></div></div>
                       </div>
                     </td>
                   </tr>
@@ -561,8 +637,8 @@
                     <td class="p-3 text-slate-600">5/25 <span class="text-slate-400">(20%)</span></td>
                     <td class="p-3">
                       <div class="space-y-1.5">
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:28%"></div></div></div>
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:20%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" data-width="28%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" data-width="20%"></div></div></div>
                       </div>
                     </td>
                   </tr>
@@ -573,12 +649,18 @@
 
           <div class="grid sm:grid-cols-2 gap-4 text-sm mb-6">
             <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">CTESS Strength</p>
+              <div class="flex items-center justify-between mb-1">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">CTESS Strength</p>
+                <button type="button" onclick="showRubricModal('3.1')" class="text-xs text-utsa-orange hover:underline font-bold">View Rubric</button>
+              </div>
               <p class="font-bold text-utsa-navy">3.1 Classroom Environment</p>
               <p class="text-xs text-slate-600 mt-1">Routines established: students line up, enter, and start warm-ups.</p>
             </div>
             <div class="p-4 bg-orange-50/60 rounded-xl border border-utsa-orange/20">
-              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Growth Focus</p>
+              <div class="flex items-center justify-between mb-1">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Growth Focus</p>
+                <button type="button" onclick="showRubricModal('3.2')" class="text-xs text-utsa-orange hover:underline font-bold">View Rubric</button>
+              </div>
               <p class="font-bold text-utsa-navy">3.2 Managing Student Behavior</p>
               <p class="text-xs text-slate-600 mt-1">Use a consistent class-wide attention signal and pause until all students are attentive.</p>
             </div>
@@ -594,33 +676,44 @@
               <h3 class="text-xl font-black text-utsa-navy">Civil War Review</h3>
               <p class="text-sm text-slate-500 mt-1">Mar 31, 2026 · Rudder Middle School · 8th Grade U.S. History · 45 min · 24 students</p>
             </div>
-            <button type="button" onclick="showLesson(null)" class="text-xs font-bold text-utsa-navy hover:text-utsa-orange underline shrink-0">Clear selection</button>
+            <div class="flex items-center gap-2">
+              <a href="https://docs.google.com/document/d/1KgKgkRPvUTM-eXQ1EsWv_Bi_YrovxJVW/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-xs font-bold bg-utsa-navy hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg transition inline-flex items-center gap-1.5">
+                <i class="fa-solid fa-file-pdf text-utsa-orange"></i> Lesson Plan &amp; SAC
+              </a>
+              <button type="button" onclick="showLesson(null)" class="text-xs font-bold text-slate-500 hover:text-utsa-orange underline shrink-0 px-2 py-1">Close</button>
+            </div>
           </div>
+
           <div class="flex flex-wrap gap-2 mb-6">
             <span class="px-3 py-1 bg-utsa-navy/10 text-utsa-navy border border-utsa-navy/20 rounded-full text-xs font-semibold">TEKS: 8.7(E), 8.8(A)–(C)</span>
             <span class="px-3 py-1 bg-orange-50 text-utsa-orange border border-utsa-orange/30 rounded-full text-xs font-semibold">ELPS: 1A, 3D, 5B</span>
           </div>
 
           <div class="space-y-4 max-w-3xl mb-6">
-            <h4 class="text-lg font-bold text-utsa-navy">What this lesson was about</h4>
+            <h4 class="text-lg font-bold text-utsa-navy">What this lesson covered</h4>
             <p class="text-sm text-slate-600">
               45-minute Civil War review before a unit assessment. Students analyzed causes, major events, and key individuals, then explained reasoning with grade-level vocabulary.
             </p>
             <ul class="text-sm text-slate-600 list-disc pl-5 space-y-1">
               <li><strong class="text-utsa-navy">Central focus:</strong> Causes, events, and outcomes of the Civil War (TEKS 8.7(E), 8.8(A)–(C)).</li>
-              <li><strong class="text-utsa-navy">Hook:</strong> “Extension of Slavery” map warm-up with multiple-choice checks.</li>
-              <li><strong class="text-utsa-navy">Core task:</strong> Blooket review set on Chromebooks; written ticket explaining reasoning.</li>
-              <li><strong class="text-utsa-navy">Materials:</strong> Custom Blooket set, projector, Chromebooks.</li>
+              <li><strong class="text-utsa-navy">Hook:</strong> “Extension of Slavery” map warm-up with targeted multiple-choice checks.</li>
+              <li><strong class="text-utsa-navy">Core task:</strong> Blooket review question set on Chromebooks coupled with guided mind mapping.</li>
+              <li><strong class="text-utsa-navy">Exit Ticket:</strong> Written ticket prompting students to explain one major cause and one turning point battle.</li>
             </ul>
           </div>
 
           <div class="mt-6 mb-6">
-            <h4 class="text-lg font-bold text-utsa-navy mb-1">Student Achievement (class totals)</h4>
-            <p class="text-xs text-slate-500 mb-4">Pre/post performance bands on the Civil War review questions. Class size <strong class="text-utsa-navy">n=24</strong>. Counts only — no student names or initials.</p>
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-1">
+              <h4 class="text-lg font-bold text-utsa-navy">Student Achievement (class totals)</h4>
+              <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-black rounded-lg">
+                <i class="fa-solid fa-arrow-trend-up"></i> +46% Mastery Growth
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">Pre/post performance bands on the Civil War review questions. Class size <strong class="text-utsa-navy">n=24</strong>. Aggregated counts only.</p>
             <div class="overflow-x-auto rounded-xl border border-slate-200">
               <table class="w-full text-sm text-left">
                 <thead class="bg-utsa-navy text-white text-xs uppercase tracking-wider">
-                  <tr><th class="p-3">Level</th><th class="p-3">Pre</th><th class="p-3">Post</th><th class="p-3 min-w-[10rem]">Pre → Post</th></tr>
+                  <tr><th class="p-3">Level</th><th class="p-3">Pre</th><th class="p-3">Post</th><th class="p-3 min-w-[12rem]">Pre → Post Distribution</th></tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                   <tr class="bg-white">
@@ -629,8 +722,8 @@
                     <td class="p-3 text-slate-600">14/24 <span class="text-slate-400">(58%)</span></td>
                     <td class="p-3">
                       <div class="space-y-1.5">
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:12%"></div></div></div>
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:58%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" data-width="12%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" data-width="58%"></div></div></div>
                       </div>
                     </td>
                   </tr>
@@ -640,8 +733,8 @@
                     <td class="p-3 text-slate-600">6/24 <span class="text-slate-400">(25%)</span></td>
                     <td class="p-3">
                       <div class="space-y-1.5">
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:58%"></div></div></div>
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:25%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" data-width="58%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" data-width="25%"></div></div></div>
                       </div>
                     </td>
                   </tr>
@@ -651,8 +744,8 @@
                     <td class="p-3 text-slate-600">4/24 <span class="text-slate-400">(17%)</span></td>
                     <td class="p-3">
                       <div class="space-y-1.5">
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:29%"></div></div></div>
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:17%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" data-width="29%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" data-width="17%"></div></div></div>
                       </div>
                     </td>
                   </tr>
@@ -663,12 +756,18 @@
 
           <div class="grid sm:grid-cols-2 gap-4 text-sm mb-6">
             <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">CTESS Strength</p>
+              <div class="flex items-center justify-between mb-1">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">CTESS Strength</p>
+                <button type="button" onclick="showRubricModal('1.1')" class="text-xs text-utsa-orange hover:underline font-bold">View Rubric</button>
+              </div>
               <p class="font-bold text-utsa-navy">1.1 Standards &amp; Alignment</p>
               <p class="text-xs text-slate-600 mt-1">Strong content review and structured activities.</p>
             </div>
             <div class="p-4 bg-orange-50/60 rounded-xl border border-utsa-orange/20">
-              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Growth Focus</p>
+              <div class="flex items-center justify-between mb-1">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Growth Focus</p>
+                <button type="button" onclick="showRubricModal('2.5')" class="text-xs text-utsa-orange hover:underline font-bold">View Rubric</button>
+              </div>
               <p class="font-bold text-utsa-navy">2.5 Monitor &amp; Adjust</p>
               <p class="text-xs text-slate-600 mt-1">Incorporate more intentional checks for understanding and adjusting instruction in real time.</p>
             </div>
@@ -676,7 +775,7 @@
           <p class="text-xs text-slate-500">Placement mentor: Brandy Shelton-Nentwich · Rudder Middle School</p>
         </div>
 
-        <!-- POP 3 detail (16 + 11 + 3 = 30) -->
+        <!-- POP 3 detail -->
         <div id="lesson-detail-pop3" class="lesson-subpanel lesson-sub-hidden bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm" role="tabpanel" aria-labelledby="lesson-card-pop3">
           <div class="flex items-start justify-between gap-4 flex-wrap mb-6">
             <div>
@@ -684,41 +783,53 @@
               <h3 class="text-xl font-black text-utsa-navy">Freak the Mighty: Symbolism &amp; Coat of Arms</h3>
               <p class="text-sm text-slate-500 mt-1">Sep 16, 2026 · Jefferson Middle School · 6th Grade ELAR · 60 min · 30 students</p>
             </div>
-            <button type="button" onclick="showLesson(null)" class="text-xs font-bold text-utsa-navy hover:text-utsa-orange underline shrink-0">Clear selection</button>
+            <div class="flex items-center gap-2">
+              <a href="https://docs.google.com/document/d/17wfS_nUhkMCgxG2kVSPnkQNi5kZLzEV8/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-xs font-bold bg-utsa-navy hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg transition inline-flex items-center gap-1.5">
+                <i class="fa-solid fa-file-pdf text-utsa-orange"></i> Lesson Plan &amp; SAC
+              </a>
+              <button type="button" onclick="showLesson(null)" class="text-xs font-bold text-slate-500 hover:text-utsa-orange underline shrink-0 px-2 py-1">Close</button>
+            </div>
           </div>
+
           <div class="flex flex-wrap gap-2 mb-6">
             <span class="px-3 py-1 bg-utsa-navy/10 text-utsa-navy border border-utsa-navy/20 rounded-full text-xs font-semibold">TEKS: 6.7(B), 6.6(E), 6.6(H)</span>
             <span class="px-3 py-1 bg-orange-50 text-utsa-orange border border-utsa-orange/30 rounded-full text-xs font-semibold">ELPS: 3E, 3H, 4F, 5F, 5G</span>
             <span class="px-3 py-1 bg-slate-100 text-slate-600 border border-slate-200 rounded-full text-xs font-semibold">60 Minutes</span>
           </div>
+
           <div class="space-y-4 max-w-3xl mb-6">
-            <h4 class="text-lg font-bold text-utsa-navy">What this lesson was about</h4>
+            <h4 class="text-lg font-bold text-utsa-navy">What this lesson covered</h4>
             <p class="text-sm text-slate-600">
               Students defined heraldic symbolism and explained how authors use knights, armor, and crests to represent character identity in <em>Freak the Mighty</em>, then designed a personal four-quadrant Coat of Arms with a short written analysis.
             </p>
             <div class="grid sm:grid-cols-2 gap-3 text-xs text-slate-600">
               <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                <strong class="text-utsa-navy">1. Hook:</strong> "Kevin's Arthur Clues" linking braces to armor.
+                <strong class="text-utsa-navy">1. Hook:</strong> "Kevin's Arthur Clues" linking braces to humanity's first robot suits.
               </div>
               <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                <strong class="text-utsa-navy">2. Direct Instruction:</strong> Read-aloud Chapters 7–9; chivalric code.
+                <strong class="text-utsa-navy">2. Direct Instruction:</strong> Read-aloud Chapters 7–9; chivalric code principles.
               </div>
               <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                <strong class="text-utsa-navy">3. Pop Culture Bridge:</strong> Anime/gaming insignia (Asta / Black Clover).
+                <strong class="text-utsa-navy">3. Pop Culture Bridge:</strong> Anime/gaming squad insignia (Asta / *Black Clover*).
               </div>
               <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                <strong class="text-utsa-navy">4. Application:</strong> 4-quadrant Coat of Arms &amp; sentence frames.
+                <strong class="text-utsa-navy">4. Application:</strong> 4-quadrant Coat of Arms &amp; 3-sentence written analysis.
               </div>
             </div>
           </div>
 
           <div class="mt-6 mb-6">
-            <h4 class="text-lg font-bold text-utsa-navy mb-1">Student Achievement (class totals)</h4>
-            <p class="text-xs text-slate-500 mb-4">Pre/post performance bands on Coat of Arms symbolism + written analysis. Class size <strong class="text-utsa-navy">n=30</strong>. Counts only — no student names or initials.</p>
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-1">
+              <h4 class="text-lg font-bold text-utsa-navy">Student Achievement (class totals)</h4>
+              <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-black rounded-lg">
+                <i class="fa-solid fa-arrow-trend-up"></i> +46% Mastery Growth
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">Pre/post performance bands on Coat of Arms symbolism + written analysis. Class cohort <strong class="text-utsa-navy">n=30</strong>. Aggregated counts only.</p>
             <div class="overflow-x-auto rounded-xl border border-slate-200">
               <table class="w-full text-sm text-left">
                 <thead class="bg-utsa-navy text-white text-xs uppercase tracking-wider">
-                  <tr><th class="p-3">Level</th><th class="p-3">Pre</th><th class="p-3">Post</th><th class="p-3 min-w-[10rem]">Pre → Post</th></tr>
+                  <tr><th class="p-3">Level</th><th class="p-3">Pre</th><th class="p-3">Post</th><th class="p-3 min-w-[12rem]">Pre → Post Distribution</th></tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                   <tr class="bg-white">
@@ -727,8 +838,8 @@
                     <td class="p-3 text-slate-600">16/30 <span class="text-slate-400">(53%)</span></td>
                     <td class="p-3">
                       <div class="space-y-1.5">
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:7%"></div></div></div>
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:53%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" data-width="7%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" data-width="53%"></div></div></div>
                       </div>
                     </td>
                   </tr>
@@ -738,8 +849,8 @@
                     <td class="p-3 text-slate-600">11/30 <span class="text-slate-400">(37%)</span></td>
                     <td class="p-3">
                       <div class="space-y-1.5">
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:67%"></div></div></div>
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:37%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" data-width="67%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" data-width="37%"></div></div></div>
                       </div>
                     </td>
                   </tr>
@@ -749,8 +860,8 @@
                     <td class="p-3 text-slate-600">3/30 <span class="text-slate-400">(10%)</span></td>
                     <td class="p-3">
                       <div class="space-y-1.5">
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" style="width:27%"></div></div></div>
-                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" style="width:10%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Pre</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill" data-width="27%"></div></div></div>
+                        <div class="flex items-center gap-2"><span class="text-[10px] w-8 text-slate-400">Post</span><div class="sac-bar-track flex-1"><div class="sac-bar-fill post" data-width="10%"></div></div></div>
                       </div>
                     </td>
                   </tr>
@@ -761,12 +872,18 @@
 
           <div class="grid sm:grid-cols-2 gap-4 text-sm mb-6">
             <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">CTESS Strength</p>
+              <div class="flex items-center justify-between mb-1">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">CTESS Strength</p>
+                <button type="button" onclick="showRubricModal('1.1')" class="text-xs text-utsa-orange hover:underline font-bold">View Rubric</button>
+              </div>
               <p class="font-bold text-utsa-navy">1.1 Standards &amp; Alignment</p>
               <p class="text-xs text-slate-600 mt-1">Promotes student ownership, higher-level thinking, and meaningful understanding of character identity and symbolism.</p>
             </div>
             <div class="p-4 bg-orange-50/60 rounded-xl border border-utsa-orange/20">
-              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Growth Focus</p>
+              <div class="flex items-center justify-between mb-1">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Growth Focus</p>
+                <button type="button" onclick="showRubricModal('2.1')" class="text-xs text-utsa-orange hover:underline font-bold">View Rubric</button>
+              </div>
               <p class="font-bold text-utsa-navy">2.1 Achieving Expectations</p>
               <p class="text-xs text-slate-600 mt-1">Clearly communicate, display, and check understanding of expectations before each activity.</p>
             </div>
@@ -898,6 +1015,94 @@
 
   </main>
 
+  <!-- MODAL: ONE-CLICK HIRING PACKET / DOWNLOAD CENTER -->
+  <div id="modal-download" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 modal-backdrop hidden-modal" role="dialog" aria-modal="true" aria-labelledby="modal-dl-title">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 md:p-8 shadow-2xl border border-slate-100 space-y-6">
+      <div class="flex items-start justify-between">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-utsa-orange">One-Click Packet</span>
+          <h3 id="modal-dl-title" class="text-xl font-black text-utsa-navy">Candidate Hiring Documents</h3>
+        </div>
+        <button type="button" onclick="closeDownloadCenter()" class="text-slate-400 hover:text-utsa-navy text-xl font-bold p-1">&times;</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <a href="assets/docs/Roderek_Young_Resume.pdf" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-orange-50/60 rounded-xl border border-slate-200 transition group">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-file-pdf text-utsa-orange text-lg"></i>
+            <div>
+              <p class="font-bold text-utsa-navy text-sm">Professional Resume (PDF)</p>
+              <p class="text-slate-500 text-[11px]">Updated Fall 2026 • 6th ELAR &amp; 8th History Certifications</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-arrow-down-to-bracket text-slate-400 group-hover:text-utsa-orange text-sm"></i>
+        </a>
+
+        <a href="https://drive.google.com/file/d/11DKJRuVE-acVc_uYpEkTh7HJ5-XgwfGQ/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-orange-50/60 rounded-xl border border-slate-200 transition group">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-file-lines text-utsa-navy text-lg"></i>
+            <div>
+              <p class="font-bold text-utsa-navy text-sm">POP 1 Lesson Packet &amp; SAC</p>
+              <p class="text-slate-500 text-[11px]">8th History • Westward Expansion &amp; Manifest Destiny</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-utsa-orange text-sm"></i>
+        </a>
+
+        <a href="https://docs.google.com/document/d/1KgKgkRPvUTM-eXQ1EsWv_Bi_YrovxJVW/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-orange-50/60 rounded-xl border border-slate-200 transition group">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-file-lines text-utsa-navy text-lg"></i>
+            <div>
+              <p class="font-bold text-utsa-navy text-sm">POP 2 Lesson Packet &amp; SAC</p>
+              <p class="text-slate-500 text-[11px]">8th History • Civil War Review &amp; Assessment</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-utsa-orange text-sm"></i>
+        </a>
+
+        <a href="https://docs.google.com/document/d/17wfS_nUhkMCgxG2kVSPnkQNi5kZLzEV8/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-orange-50/60 rounded-xl border border-slate-200 transition group">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-file-lines text-utsa-navy text-lg"></i>
+            <div>
+              <p class="font-bold text-utsa-navy text-sm">POP 3 Lesson Packet &amp; SAC</p>
+              <p class="text-slate-500 text-[11px]">6th ELAR • Freak the Mighty: Symbolism &amp; Coat of Arms</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-utsa-orange text-sm"></i>
+        </a>
+      </div>
+
+      <div class="pt-2 text-right">
+        <button type="button" onclick="closeDownloadCenter()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">
+          Close Window
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CTESS / T-TESS RUBRIC DRILLDOWN -->
+  <div id="modal-rubric" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 modal-backdrop hidden-modal" role="dialog" aria-modal="true" aria-labelledby="modal-rubric-title">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-slate-100 space-y-4">
+      <div class="flex items-start justify-between">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-utsa-orange">TEA Evaluation Rubric</span>
+          <h3 id="modal-rubric-title" class="text-xl font-black text-utsa-navy">Dimension Overview</h3>
+        </div>
+        <button type="button" onclick="closeRubricModal()" class="text-slate-400 hover:text-utsa-navy text-xl font-bold p-1">&times;</button>
+      </div>
+
+      <div id="modal-rubric-content" class="text-xs text-slate-600 space-y-3 leading-relaxed">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 text-right">
+        <button type="button" onclick="closeRubricModal()" class="px-4 py-2 bg-utsa-navy hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition">
+          Got it
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <footer class="py-8 bg-utsa-navy text-slate-300 text-center text-xs border-t border-utsa-navy mt-auto">
     <p class="text-white">&copy; 2026 Roderek Young. All rights reserved.</p>
@@ -996,7 +1201,7 @@
           next.classList.add('view-fading-in', 'view-active');
           next.style.opacity = '0';
 
-          void next.offsetWidth; // Force reflow
+          void next.offsetWidth;
           next.style.opacity = '1';
 
           window.setTimeout(function () {
@@ -1015,9 +1220,24 @@
         navigate(hash);
       }
 
+      /* Lesson Selector & Dynamic Bar Fill */
       var LESSONS = ['pop1', 'pop2', 'pop3'];
       var lessonAnimating = false;
       var activeLesson = null;
+
+      function animateBars(container) {
+        if (!container) return;
+        var fills = container.querySelectorAll('.sac-bar-fill');
+        fills.forEach(function (bar) {
+          bar.style.width = '0%';
+        });
+        window.setTimeout(function () {
+          fills.forEach(function (bar) {
+            var target = bar.getAttribute('data-width') || '0%';
+            bar.style.width = target;
+          });
+        }, 100);
+      }
 
       function showLesson(lessonId) {
         if (lessonId !== null && LESSONS.indexOf(lessonId) === -1) return;
@@ -1038,12 +1258,14 @@
 
         if (current === next) {
           activeLesson = lessonId;
+          animateBars(next);
           return;
         }
 
         function finish() {
           activeLesson = lessonId;
           lessonAnimating = false;
+          animateBars(next);
         }
 
         if (prefersReducedMotion() || lessonAnimating) {
@@ -1072,19 +1294,19 @@
             current.style.opacity = '';
           }
           next.classList.remove('lesson-sub-hidden');
-          next.classList.add('lesson-sub-in', 'lesson-sub-active');
+          next.classList.add('lesson-sub-fading-in', 'lesson-sub-active');
           next.style.opacity = '0';
           void next.offsetWidth;
           next.style.opacity = '1';
           window.setTimeout(function () {
-            next.classList.remove('lesson-sub-in');
+            next.classList.remove('lesson-sub-fading-in');
             next.style.opacity = '';
             finish();
           }, FADE_MS);
         }, current ? FADE_MS : 0);
       }
 
-      // Keyboard arrow navigation for tabs
+      /* Keyboard Arrow Navigation */
       var tabList = document.querySelector('[role="tablist"]');
       if (tabList) {
         tabList.addEventListener('keydown', function (e) {
@@ -1108,6 +1330,91 @@
         });
       }
 
+      /* Download Center Modal */
+      function openDownloadCenter() {
+        var m = document.getElementById('modal-download');
+        if (!m) return;
+        m.classList.remove('hidden-modal');
+        m.classList.add('active-modal');
+      }
+
+      function closeDownloadCenter() {
+        var m = document.getElementById('modal-download');
+        if (!m) return;
+        m.classList.remove('active-modal');
+        m.classList.add('hidden-modal');
+      }
+
+      /* T-TESS / CTESS Rubric Data */
+      var RUBRIC_DATA = {
+        '1.1': {
+          title: 'Dimension 1.1: Standards and Alignment',
+          desc: 'The teacher designs clear, well-organized, sequential lessons that reflect the state standards (TEKS) and English Language Proficiency Standards (ELPS).',
+          evidence: 'Evaluator noted strong alignment to TEKS, purposeful cognitive engagement, and student ownership in analyzing symbolism and primary source content.'
+        },
+        '2.1': {
+          title: 'Dimension 2.1: Achieving Expectations',
+          desc: 'The teacher sets challenging academic expectations, communicates goals clearly, and ensures students understand the criteria for success before and during learning tasks.',
+          evidence: 'Growth focus centered on clearly displaying and verifying behavioral and task expectations prior to student release into independent project phases.'
+        },
+        '2.5': {
+          title: 'Dimension 2.5: Monitor and Adjust',
+          desc: 'The teacher systematically monitors student understanding through questioning, real-time feedback, and instructional pacing adjustments based on formative checks.',
+          evidence: 'Growth step targeted checking student mastery in real time during gaming/review activities and pausing instruction to address collective misconceptions.'
+        },
+        '3.1': {
+          title: 'Dimension 3.1: Classroom Environment, Routines & Procedures',
+          desc: 'The teacher organizes a safe, respectful learning space and maintains smooth, established classroom routines that maximize instructional time.',
+          evidence: 'Evaluator commended smooth student entry routines, prompt warm-up starts, and established organization of instructional materials.'
+        },
+        '3.2': {
+          title: 'Dimension 3.2: Managing Student Behavior',
+          desc: 'The teacher establishes, communicates, and maintains clear expectations for student conduct using proactive redirection and positive reinforcement.',
+          evidence: 'Targeted refinement centered on using a consistent whole-class attention signal and pausing with full wait-time until 100% active student listening is attained.'
+        }
+      };
+
+      function showRubricModal(dimension) {
+        var data = RUBRIC_DATA[dimension];
+        if (!data) return;
+        var modal = document.getElementById('modal-rubric');
+        var title = document.getElementById('modal-rubric-title');
+        var content = document.getElementById('modal-rubric-content');
+        if (!modal || !title || !content) return;
+
+        title.textContent = data.title;
+        content.innerHTML = `
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+            <p class="font-bold text-utsa-navy text-xs uppercase tracking-wider mb-1">State Standard Definition</p>
+            <p class="text-slate-600">${data.desc}</p>
+          </div>
+          <div class="p-3 bg-orange-50/60 border border-utsa-orange/20 rounded-xl">
+            <p class="font-bold text-utsa-orange text-xs uppercase tracking-wider mb-1">Clinical Observation Evidence</p>
+            <p class="text-slate-700">${data.evidence}</p>
+          </div>
+        `;
+
+        modal.classList.remove('hidden-modal');
+        modal.classList.add('active-modal');
+      }
+
+      function closeRubricModal() {
+        var modal = document.getElementById('modal-rubric');
+        if (!modal) return;
+        modal.classList.remove('active-modal');
+        modal.classList.add('hidden-modal');
+      }
+
+      /* Modal background dismiss */
+      document.querySelectorAll('.modal-backdrop').forEach(function (backdrop) {
+        backdrop.addEventListener('click', function (e) {
+          if (e.target === backdrop) {
+            backdrop.classList.remove('active-modal');
+            backdrop.classList.add('hidden-modal');
+          }
+        });
+      });
+
       var _navigate = navigate;
       navigate = function (viewId) {
         _navigate(viewId);
@@ -1118,6 +1425,10 @@
 
       window.navigate = navigate;
       window.showLesson = showLesson;
+      window.openDownloadCenter = openDownloadCenter;
+      window.closeDownloadCenter = closeDownloadCenter;
+      window.showRubricModal = showRubricModal;
+      window.closeRubricModal = closeRubricModal;
       window.addEventListener('hashchange', syncFromHash);
       document.addEventListener('DOMContentLoaded', syncFromHash);
       if (document.readyState !== 'loading') syncFromHash();
