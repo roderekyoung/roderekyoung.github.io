@@ -590,6 +590,19 @@
               </td>
               <td class="p-4 text-slate-500">Display and verify expectations before activities.</td>
             </tr>
+            <tr>
+              <td class="p-4 font-bold text-utsa-navy">POP 4</td>
+              <td class="p-4">Nov 3, 2026 • Jefferson MS</td>
+              <td class="p-4 font-medium text-utsa-navy">Informational Text Structures &amp; Author's Purpose</td>
+              <td class="p-4">
+                <button type="button" onclick="showRubricModal('2.5')" class="text-left group flex items-center gap-1.5">
+                  <span class="px-2 py-1 bg-orange-50 text-utsa-orange rounded font-semibold text-xs border border-utsa-orange/30 group-hover:border-utsa-navy transition">2.5 Monitor &amp; Adjust</span>
+                  <i class="fa-solid fa-circle-info text-slate-400 group-hover:text-utsa-navy text-xs"></i>
+                </button>
+              </td>
+              <td class="p-4 text-slate-500">Structured partner discussion in every lesson.</td>
+            </tr>
+          
           </tbody>
         </table>
       </div>
@@ -601,11 +614,11 @@
     <div id="view-lessons" class="view-panel view-hidden space-y-8" role="region" aria-label="Sample lessons">
       <div class="border-b border-slate-200 pb-4">
         <h2 class="text-2xl font-black text-utsa-navy">Sample Lessons</h2>
-        <p class="text-slate-500 text-sm mt-1">Formal observations POP 1–3 · TEKS &amp; ELPS aligned</p>
+        <p class="text-slate-500 text-sm mt-1">Formal observations POP 1–4 · TEKS &amp; ELPS aligned</p>
       </div>
 
       <!-- Lesson picker tablist with ARIA keys -->
-      <div class="grid sm:grid-cols-3 gap-4" role="tablist" aria-label="Observed lessons">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4" role="tablist" aria-label="Observed lessons">
         <button type="button" id="lesson-card-pop1" role="tab" tabindex="0" aria-selected="false" aria-controls="lesson-detail-pop1" onclick="showLesson('pop1')" class="lesson-card text-left bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:border-utsa-orange/60 focus-visible:ring-2 focus-visible:ring-utsa-orange card-elevate">
           <div class="flex items-center justify-between mb-2">
             <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-utsa-orange">
@@ -637,6 +650,16 @@
           </div>
           <h3 class="text-sm font-black text-utsa-navy leading-snug">Freak the Mighty: Symbolism &amp; Coat of Arms</h3>
           <p class="text-xs text-slate-500 mt-2">Sep 16, 2026 · Jefferson MS</p>
+        </button>
+        <button type="button" id="lesson-card-pop4" role="tab" tabindex="-1" aria-selected="false" aria-controls="lesson-detail-pop4" onclick="showLesson('pop4')" class="lesson-card text-left bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:border-utsa-orange/60 focus-visible:ring-2 focus-visible:ring-utsa-orange card-elevate">
+          <div class="flex items-center justify-between mb-2">
+            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-utsa-orange">
+              <i class="fa-solid fa-chalkboard" aria-hidden="true"></i> POP 4
+            </span>
+            <span class="text-[10px] bg-orange-100 text-utsa-orange px-2 py-0.5 rounded-full font-semibold">6th ELAR</span>
+          </div>
+          <h3 class="text-sm font-black text-utsa-navy leading-snug">Informational Text Structures &amp; Author's Purpose</h3>
+          <p class="text-xs text-slate-500 mt-2">Nov 3, 2026 · Jefferson MS</p>
         </button>
       </div>
 
@@ -1002,6 +1025,70 @@
           </div>
           <p class="text-xs text-slate-500">Placement mentor: Mrs. Michelle Cerna · Jefferson Middle School</p>
         </div>
+
+        <!-- POP 4 detail -->
+        <div id="lesson-detail-pop4" class="lesson-subpanel lesson-sub-hidden bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm" role="tabpanel" aria-labelledby="lesson-card-pop4">
+          <div class="flex items-start justify-between gap-4 flex-wrap mb-6">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-wider text-utsa-orange mb-1">POP 4 · Formal Observation</p>
+              <h3 class="text-xl font-black text-utsa-navy">Informational Text Structures &amp; Author's Purpose</h3>
+              <p class="text-sm text-slate-500 mt-1">Nov 3, 2026 · Jefferson Middle School · 6th Grade ELAR Reading</p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="px-3 py-1 bg-utsa-navy/10 text-utsa-navy border border-utsa-navy/20 rounded-full text-xs font-semibold">Content &amp; language objectives</span>
+            <span class="px-3 py-1 bg-orange-50 text-utsa-orange border border-utsa-orange/30 rounded-full text-xs font-semibold">Target: 80% accuracy</span>
+            <span class="px-3 py-1 bg-slate-100 text-slate-600 border border-slate-200 rounded-full text-xs font-semibold">Emergent bilingual supports</span>
+          </div>
+
+          <div class="space-y-4 max-w-3xl mb-6">
+            <h4 class="text-lg font-bold text-utsa-navy">What this lesson covered</h4>
+            <p class="text-sm text-slate-600">
+              Students learned to tell apart five informational text structures (cause and effect, problem and solution, description, compare and contrast, and sequential order) and to explain how each one supports the author's purpose.
+            </p>
+            <div class="grid sm:grid-cols-2 gap-3 text-xs text-slate-600">
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <strong class="text-utsa-navy">1. Connect:</strong> Linked the review to the previous day's gallery walk and the upcoming projects.
+              </div>
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <strong class="text-utsa-navy">2. Model:</strong> Slides, visuals, and signal words for all five structures, with relatable examples and a cats-and-dogs Venn diagram.
+              </div>
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <strong class="text-utsa-navy">3. Check:</strong> A Kahoot review where every student answered individually, and I used the results to clear up misconceptions on the spot.
+              </div>
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <strong class="text-utsa-navy">4. Exit ticket:</strong> An individual check connecting text structure to the author's purpose.
+              </div>
+            </div>
+            <p class="text-xs text-slate-500"><strong class="text-utsa-navy">Supports:</strong> two leveled versions of the practice passages, graphic organizers, bolded signal words, and the sentence frame "The author used ___ to show ___."</p>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4 text-sm mb-6">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <div class="flex items-center justify-between mb-1">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">CTESS Strength</p>
+                <button type="button" onclick="showRubricModal('2.5')" class="text-xs text-utsa-orange hover:underline font-bold">View Rubric</button>
+              </div>
+              <p class="font-bold text-utsa-navy">2.5 Monitor &amp; Adjust</p>
+              <p class="text-xs text-slate-600 mt-1">Used real-time Kahoot responses to spot and correct misconceptions, explaining why a wrong answer seemed plausible before clarifying the right one.</p>
+            </div>
+            <div class="p-4 bg-orange-50/60 rounded-xl border border-utsa-orange/20">
+              <div class="flex items-center justify-between mb-1">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Growth Focus</p>
+                <button type="button" onclick="showRubricModal('2.3')" class="text-xs text-utsa-orange hover:underline font-bold">View Rubric</button>
+              </div>
+              <p class="font-bold text-utsa-navy">2.3 Communication</p>
+              <p class="text-xs text-slate-600 mt-1">Use at least one structured partner discussion in each lesson so every student explains key concepts with academic vocabulary and evidence.</p>
+            </div>
+          </div>
+
+          <blockquote class="p-4 bg-utsa-navy/5 rounded-xl border-l-4 border-utsa-orange text-sm text-slate-700 italic mb-4">
+            "[He] has built a great rapport with the students. He is improving in all areas and doing a great job."
+            <span class="block not-italic text-xs text-slate-500 mt-1">Mentor teacher, POP 4</span>
+          </blockquote>
+          <p class="text-xs text-slate-500">Placement mentor: Mrs. Michelle Cerna · Jefferson Middle School</p>
+        </div>
       </div>
     </div>
 
@@ -1333,7 +1420,7 @@
       }
 
       /* Lesson Selector & Dynamic Bar Fill */
-      var LESSONS = ['pop1', 'pop2', 'pop3'];
+      var LESSONS = ['pop1', 'pop2', 'pop3', 'pop4'];
       var lessonAnimating = false;
       var activeLesson = null;
 
@@ -1468,6 +1555,11 @@
           title: 'Dimension 2.1: Achieving Expectations',
           desc: 'The teacher sets challenging academic expectations, communicates goals clearly, and ensures students understand the criteria for success before and during learning tasks.',
           evidence: 'Growth focus centered on clearly displaying and verifying behavioral and task expectations prior to student release into independent project phases.'
+        },
+        '2.3': {
+          title: 'Dimension 2.3: Communication',
+          desc: 'The teacher clearly and accurately communicates to support persistence, deeper learning, and effective effort.',
+          evidence: 'POP 4 growth focus: build in structured partner discussions so every student explains key concepts in their own words using academic vocabulary and evidence.'
         },
         '2.5': {
           title: 'Dimension 2.5: Monitor and Adjust',
